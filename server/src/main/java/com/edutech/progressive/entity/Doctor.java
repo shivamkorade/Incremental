@@ -1,6 +1,6 @@
 package com.edutech.progressive.entity;
 
-public class Doctor {
+public class Doctor implements Comparable<Doctor>{
     private int doctorId;
     private String fullName;
     private String specialty;
@@ -53,6 +53,10 @@ public class Doctor {
     }
     public void setYearsOfExperience(int yearsOfExperience) {
         this.yearsOfExperience = yearsOfExperience;
+    }
+    @Override
+    public int compareTo(Doctor o) {
+        return Integer.compare(this.getYearsOfExperience(), o.getYearsOfExperience());
     }
     
     
