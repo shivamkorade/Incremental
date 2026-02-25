@@ -3,6 +3,8 @@ package com.edutech.progressive;
 import java.sql.Date;
 import java.sql.SQLException;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import com.edutech.progressive.dao.ClinicDAOImpl;
 import com.edutech.progressive.dao.DoctorDAOImpl;
 import com.edutech.progressive.dao.PatientDAOImpl;
@@ -14,9 +16,11 @@ import com.edutech.progressive.service.impl.ClinicServiceImplJpa;
 import com.edutech.progressive.service.impl.DoctorServiceImplJdbc;
 import com.edutech.progressive.service.impl.PatientServiceImplJdbc;
 
+@SpringBootApplication
 public class MediConnectApplication {
     public static void main(String[] args) {
-        System.out.println("Welcome to MediConnect Progressive Project!");
+        // System.out.println("Welcome to MediConnect Progressive Project!");
+        System.out.println("Hello MediConnect Progressive Project");
 
         // Patient patient = new Patient(0, "TanmayDhumne",Date.valueOf("2003-09-09"), "8830971721", "asdasda@gmail.com", "asdasdasd");
         // Patient patient2 = new Patient(0, "TanmayDhumne2",Date.valueOf("2003-09-09"), "8830971722", "as2dasda@gmail.com", "asdasdasd");
