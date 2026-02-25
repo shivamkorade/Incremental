@@ -28,7 +28,7 @@ public class PatientServiceImplJdbc implements PatientService {
     }
 
     @Override
-    public Integer addPatient(Patient patient) {
+    public Integer addPatient(Patient patient)  {
         try {
             return impl.addPatient(patient);
         } catch (SQLException e) {

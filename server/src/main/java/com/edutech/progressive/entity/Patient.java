@@ -61,4 +61,11 @@ public class Patient implements Comparable<Patient>{
       return this.getFullName().compareTo(o.getFullName());
     }
     
+    @Override
+    public String toString() {
+        return "Patient [patientId=" + patientId + ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth
+                + ", contactNumber=" + contactNumber + ", email=" + email + ", address=" + address + "]";
+    }
+    
+    
 }

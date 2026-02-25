@@ -59,5 +59,13 @@ public class Doctor implements Comparable<Doctor>{
         return Integer.compare(this.getYearsOfExperience(), o.getYearsOfExperience());
     }
     
+    @Override
+    public String toString() {
+        return "Doctor [doctorId=" + doctorId + ", fullName=" + fullName + ", specialty=" + specialty
+                + ", contactNumber=" + contactNumber + ", email=" + email + ", yearsOfExperience=" + yearsOfExperience
+                + "]";
+    }
+    
+    
     
 }

@@ -55,4 +55,11 @@ public class Clinic {
         this.establishedYear = establishedYear;
     }
     
+    @Override
+    public String toString() {
+        return "Clinic [clinicId=" + clinicId + ", clinicName=" + clinicName + ", location=" + location + ", doctorId="
+                + doctorId + ", contactNumber=" + contactNumber + ", establishedYear=" + establishedYear + "]";
+    }
+    
+    
 }
