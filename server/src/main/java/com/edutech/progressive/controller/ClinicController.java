@@ -2,9 +2,10 @@ package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Clinic;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
+@RestController
 public class ClinicController {
     public ResponseEntity<List<Clinic>> getAllClinics() {
         return null;
