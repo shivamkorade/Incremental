@@ -32,19 +32,31 @@ private static final Properties properties = new Properties();
     }
 
     // Returns JDBC connection
-    public static Connection getConnection() throws SQLException {
-        loadProperties(); // Load properties before creating connection
+    // public static Connection getConnection() throws SQLException {
+    //     loadProperties(); // Load properties before creating connection
 
-        String url = properties.getProperty("db.url");
-        String username = properties.getProperty("db.username");
-        String password = properties.getProperty("db.password");
-        String driver = properties.getProperty("db.driver");
+        // String url = properties.getProperty("db.url");
+        // String username = properties.getProperty("db.username");
+        // String password = properties.getProperty("db.password");
+        // String driver = properties.getProperty("db.driver");
 
-        try {
-            Class.forName(driver); // Load driver
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("Database Driver not found: " + driver, e);
+       public static String url="jdbc:mysql://localhost:3306/mydb";
+       public static String username = "root";
+       public static String password ="root";
+
+    //     try {
+    //         Class.forName(driver); // Load driver
+    //     } catch (ClassNotFoundException e) {
+    //         throw new SQLException("Database Driver not found: " + driver, e);
+    //     }
+    //     return DriverManager.getConnection(url, username, password);
+    // }
+
+        public static Connection getConnection() throws SQLException{
+            return DriverManager.getConnection(url,username,password);
         }
-        return DriverManager.getConnection(url, username, password);
+
     }
-}
+// }
+
+

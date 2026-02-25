@@ -19,7 +19,7 @@ public class PatientServiceImplArraylist implements PatientService {
     @Override
     public Integer addPatient(Patient patient) {
          patientList.add(patient);
-return patientList.size();
+         return patientList.size();
       
     }
 

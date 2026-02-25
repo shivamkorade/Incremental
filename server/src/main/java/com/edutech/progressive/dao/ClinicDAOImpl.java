@@ -27,15 +27,20 @@ public class ClinicDAOImpl implements ClinicDAO{
     @Override
     public int addClinic(Clinic clinic) throws SQLException {
         String sql = "INSERT INTO clinic (clinic_name,location,doctor_id,contact_number,established_year) values (?,?,?,?,?)";
-        PreparedStatement smt = connection.prepareStatement(sql);
+        PreparedStatement smt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
         smt.setString(1,clinic.getClinicName());
        smt.setString(2,clinic.getLocation());
         smt.setInt(3,clinic.getDoctorId());
         smt.setString(4,clinic.getContactNumber());
         smt.setInt(5,clinic.getEstablishedYear());
-       
-        int i= smt.executeUpdate();
-        return i;
+        smt.executeUpdate();
+
+        ResultSet rs = smt.getGeneratedKeys();
+        if(rs.next()){
+            clinic.setClinicId(rs.getInt(1));
+            return rs.getInt(1);
+        }
+        return -1;
        
     }
 
@@ -56,12 +61,16 @@ public class ClinicDAOImpl implements ClinicDAO{
             Clinic clinic = new Clinic(id, name, location, dId, number, year);
             return clinic;
         }
-        return null;
+            throw new SQLException("not found ");
     }
 
     @Override
     public void updateClinic(Clinic clinic) throws SQLException {
-        String sql = "update clinic set clinic_name=?,location=?,doctor_id=?,contact_number=?,established_year=? where clinic_id=?";
+        int i =0;
+        for(Clinic c:getAllClinics()){
+            if(c.getClinicId()==clinic.getClinicId()){
+                 i=1;
+                 String sql = "update clinic set clinic_name=?,location=?,doctor_id=?,contact_number=?,established_year=? where clinic_id=?";
         PreparedStatement smt =connection.prepareStatement(sql);
         smt.setString(1,clinic.getClinicName());
        smt.setString(2,clinic.getLocation());
@@ -70,16 +79,32 @@ public class ClinicDAOImpl implements ClinicDAO{
         smt.setInt(5,clinic.getEstablishedYear());
         smt.setInt(6,clinic.getClinicId());
         smt.executeUpdate();
+            }
+        }
         
+        if(i==0){
+            throw new SQLException();
+        }
         
     }
 
     @Override
     public void deleteClinic(int clinicId) throws SQLException {
-        String sql = "delete from clinic where clinic_id=?";
+        int i=0;
+        for(Clinic c:getAllClinics()){
+            if(c.getClinicId()==clinicId){
+                i=1;
+                String sql = "delete from clinic where clinic_id=?";
         PreparedStatement smt = connection.prepareStatement(sql);
         smt.setInt(1, clinicId);
         smt.executeUpdate();
+            }
+        }
+
+        if(i==0){
+            throw new SQLException();
+        }
+        
         
     }
 

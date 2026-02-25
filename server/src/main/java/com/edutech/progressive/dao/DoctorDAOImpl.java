@@ -26,7 +26,7 @@ public class DoctorDAOImpl implements DoctorDAO {
 
     @Override
     public int addDoctor(Doctor doctor) throws SQLException {
-    String sql = "INSERT INTO doctor (full_name,specialty,contact_number,email,year_of_experience) values (?,?,?,?,?)";
+    String sql = "insert into doctor (full_name,specialty,contact_number,email,years_of_experience) values (?,?,?,?,?)";
         PreparedStatement smt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
         smt.setString(1,doctor.getFullName());
        smt.setString(2,doctor.getSpecialty());
@@ -38,7 +38,7 @@ public class DoctorDAOImpl implements DoctorDAO {
         ResultSet rs = smt.getGeneratedKeys();
         if(rs.next()){
             doctor.setDoctorId(rs.getInt(1));
-            return 1;
+            return rs.getInt(1);
         }
         return -1;
     }
@@ -55,17 +55,21 @@ public class DoctorDAOImpl implements DoctorDAO {
             String specialty = rs.getString("specialty");
             String number = rs.getString("contact_number");
             String email = rs.getString("email");
-            int exp = rs.getInt("year_of_experience");
+            int exp = rs.getInt("years_of_experience");
 
             Doctor doctor = new Doctor(id, name, specialty, number, email, exp);
             return doctor;
         }
-        return null;
+        throw new SQLException("No Doctor with such ID found...");
     }
 
     @Override
     public void updateDoctor(Doctor doctor) throws SQLException {
-         String sql = "update doctor set full_name=?,specialty=?,contact_number=?,email=?,year_of_experience=? where doctor_id=?";
+        int i=0;
+        for(Doctor d:getAllDoctors()){
+            if(d.getDoctorId()==doctor.getDoctorId()){
+                i=1;
+                String sql = "update doctor set full_name=?,specialty=?,contact_number=?,email=?,years_of_experience=? where doctor_id=?";
         PreparedStatement smt = connection.prepareStatement(sql);
         smt.setString(1,doctor.getFullName());
         smt.setString(2,doctor.getSpecialty());
@@ -74,14 +78,34 @@ public class DoctorDAOImpl implements DoctorDAO {
         smt.setInt(5,doctor.getYearsOfExperience());
         smt.setInt(6,doctor.getDoctorId());
         smt.executeUpdate();
+
+            }
+        }
+
+        if(i==0){
+            throw new SQLException();
+        }
+         
     }
 
     @Override
     public void deleteDoctor(int doctorId) throws SQLException {
-        String sql = "delete from doctor where doctor_id=?";
+       int i=0;
+       for(Doctor d:getAllDoctors()){
+        if(d.getDoctorId()==doctorId){
+             i=1;
+             String sql = "delete from doctor where doctor_id=?";
         PreparedStatement smt = connection.prepareStatement(sql);
         smt.setInt(1, doctorId);
         smt.executeUpdate();
+        }
+    
+       }
+       
+       if(i==0){
+        throw new SQLException();
+       }
+
     }
 
     @Override
@@ -97,7 +121,7 @@ public class DoctorDAOImpl implements DoctorDAO {
             String specialty = rs.getString("specialty");
             String number = rs.getString("contact_number");
             String email = rs.getString("email");
-            int exp = rs.getInt("year_of_experience");
+            int exp = rs.getInt("years_of_experience");
 
             Doctor doctor = new Doctor(id, name, specialty, number, email, exp);
             doctorList.add(doctor);
