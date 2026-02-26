@@ -70,7 +70,7 @@ public class PatientController {
             } catch (Exception ignore) { /* ignore if not present */ }
 
             jpaService.updatePatient(patient);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
