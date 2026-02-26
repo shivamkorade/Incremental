@@ -4,6 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Doctor implements Comparable<Doctor>{
@@ -15,6 +22,12 @@ public class Doctor implements Comparable<Doctor>{
     private String contactNumber;
     private String email;
     private int yearsOfExperience;
+
+    // --- Association: One Doctor has many Clinics ---
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonIgnore // avoid infinite recursion / large payloads in JSON
+    private List<Clinic> clinics = new ArrayList<>();
+
     public Doctor() {
     }
     public Doctor(int doctorId, String fullName, String specialty, String contactNumber, String email,
@@ -62,18 +75,23 @@ public class Doctor implements Comparable<Doctor>{
     public void setYearsOfExperience(int yearsOfExperience) {
         this.yearsOfExperience = yearsOfExperience;
     }
+
+    public List<Clinic> getClinics() {
+        return clinics;
+    }
+    public void setClinics(List<Clinic> clinics) {
+        this.clinics = clinics;
+    }
+
     @Override
     public int compareTo(Doctor o) {
         return Integer.compare(this.getYearsOfExperience(), o.getYearsOfExperience());
     }
-    
+
     @Override
     public String toString() {
         return "Doctor [doctorId=" + doctorId + ", fullName=" + fullName + ", specialty=" + specialty
                 + ", contactNumber=" + contactNumber + ", email=" + email + ", yearsOfExperience=" + yearsOfExperience
                 + "]";
     }
-    
-    
-    
 }

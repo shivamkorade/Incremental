@@ -24,7 +24,7 @@ public class PatientController {
     @Autowired
     private PatientServiceImplJpa jpaService;
 
-    // ========================= JPA-like endpoints =========================
+    
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
@@ -85,8 +85,7 @@ public class PatientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    // ========================= ArrayList endpoints =========================
+    
 
     @GetMapping("/fromArrayList")
     public ResponseEntity<List<Patient>> getAllPatientFromArrayList() {
