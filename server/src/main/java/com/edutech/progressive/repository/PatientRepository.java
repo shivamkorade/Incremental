@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
+
+    // Optional<Patient> findByEmail(String email);
 
     // Derived query (as required): findByPatientId
     Patient findByPatientId(Integer patientId);
@@ -21,5 +24,5 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     // @Query("SELECT p FROM Patient p ORDER BY p.name ASC")
     // List<Patient> getAllPatientSortedByName();
 
-    Patient findByEmail(String email);
+    Optional<Patient> findByEmail(String email);
 }

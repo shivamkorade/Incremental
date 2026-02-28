@@ -1,6 +1,7 @@
 package com.edutech.progressive.service.impl;
 
 import com.edutech.progressive.entity.Clinic;
+import com.edutech.progressive.exception.ClinicAlreadyExistsException;
 import com.edutech.progressive.repository.ClinicRepository;
 import com.edutech.progressive.service.ClinicService;
 import org.springframework.stereotype.Service;
@@ -26,13 +27,18 @@ public class ClinicServiceImplJpa implements ClinicService {
     @Override
     public Clinic getClinicById(int clinicId) {
         // Return null when not found (aligns with tests expecting Clinic, not Optional)
-        return clinicRepository.findByClinicId(clinicId).orElse(null);
+        return clinicRepository.findByClinicId(clinicId).orElseThrow(()-> new RuntimeException("Clinic not found with id: "+clinicId));
     }
 
     @Override
     public Integer addClinic(Clinic clinic) {
-        Clinic saved = clinicRepository.save(clinic);
-        return saved.getClinicId();
+        // Clinic saved = clinicRepository.save(clinic);
+        // return saved.getClinicId();
+        if (clinicRepository.findByClinicName(clinic.getClinicName()).isPresent()) 
+            { 
+                throw new ClinicAlreadyExistsException("Clinic already exists with name: " + clinic.getClinicName()); 
+            } 
+        return clinic.getClinicId();
     }
 
     @Override

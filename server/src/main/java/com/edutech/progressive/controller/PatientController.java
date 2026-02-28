@@ -24,8 +24,6 @@ public class PatientController {
     @Autowired
     private PatientServiceImplJpa jpaService;
 
-    
-
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
         try {
@@ -53,7 +51,8 @@ public class PatientController {
     public ResponseEntity<Integer> addPatient(@RequestBody Patient patient) {
         try {
             Integer id = jpaService.addPatient(patient);
-            if (id == null) id = 0;
+            if (id == null)
+                id = 0;
             return ResponseEntity.created(URI.create("/patient/" + id)).body(id);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -62,12 +61,13 @@ public class PatientController {
 
     @PutMapping(value = "/{patientId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updatePatient(@PathVariable int patientId,
-                                              @RequestBody Patient patient) {
+            @RequestBody Patient patient) {
         try {
             // Make path id authoritative if setter exists
             try {
                 patient.getClass().getMethod("setPatientId", Integer.class).invoke(patient, patientId);
-            } catch (Exception ignore) { /* ignore if not present */ }
+            } catch (Exception ignore) {
+                /* ignore if not present */ }
 
             jpaService.updatePatient(patient);
             return ResponseEntity.ok().build();
@@ -85,7 +85,6 @@ public class PatientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
 
     @GetMapping("/fromArrayList")
     public ResponseEntity<List<Patient>> getAllPatientFromArrayList() {

@@ -35,4 +35,10 @@ public class PatientServiceImplArraylist implements PatientService {
     public void emptyArrayList() {
         patientList.clear();
     }
+
+    @Override
+    public Patient getPatientByEmail(String email) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPatientByEmail'");
+    }
 }
