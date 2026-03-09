@@ -21,7 +21,7 @@ public class PatientDAOImpl implements PatientDAO {
     
 
     @Override
-    public int addPatient(Patient patient) throws SQLException {
+    public Integer addPatient(Patient patient) throws SQLException {
         String sql = "insert into patient (full_name,date_of_birth,contact_number,email,address) values (?,?,?,?,?)";
         java.util.Date dob = patient.getDateOfBirth();
         PreparedStatement smt;
@@ -31,11 +31,11 @@ public class PatientDAOImpl implements PatientDAO {
         smt.setString(3,patient.getContactNumber());
         smt.setString(4,patient.getEmail());
         smt.setString(5,patient.getAddress());
-        int a = smt.executeUpdate();
+        Integer a = smt.executeUpdate();
 
         ResultSet rs = smt.getGeneratedKeys();
         if(rs.next()){
-            int i = rs.getInt(1);
+            Integer i = rs.getInt(1);
             patient.setPatientId(i);
             return i;
         }
@@ -47,13 +47,13 @@ public class PatientDAOImpl implements PatientDAO {
     
 
     @Override
-    public Patient getPatientById(int patientId) throws SQLException {
+    public Patient getPatientById(Integer patientId) throws SQLException {
         String sql = "Select * from patient where patient_id=?";
         PreparedStatement smt = connection.prepareStatement(sql);
         smt.setInt(1, patientId);
         ResultSet rs = smt.executeQuery();
         if(rs.next()){
-            int id = rs.getInt("patient_id");
+            Integer id = rs.getInt("patient_id");
             String name = rs.getString("full_name");
             Date date = rs.getDate("date_of_birth");
             String number = rs.getString("contact_number");
@@ -69,7 +69,7 @@ public class PatientDAOImpl implements PatientDAO {
     @Override
     public void updatePatient(Patient patient) throws SQLException {
         java.util.Date dob = patient.getDateOfBirth();
-        int i=0;
+        Integer i=0;
         for(Patient p:getAllPatients()){
              if(p.getPatientId()==patient.getPatientId())
              {
@@ -93,10 +93,10 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public void deletePatient(int patientId) throws SQLException {
+    public void deletePatient(Integer patientId) throws SQLException {
         
         // System.out.println(getAllPatients());
-        int i=0;
+        Integer i=0;
         for(Patient p:getAllPatients()){
             if(p.getPatientId()==patientId){
                 i=1;
@@ -122,7 +122,7 @@ public class PatientDAOImpl implements PatientDAO {
         PreparedStatement smt = connection.prepareStatement(sql);
         ResultSet rs = smt.executeQuery();
         while(rs.next()){
-            int id = rs.getInt("patient_id");
+            Integer id = rs.getInt("patient_id");
             String name = rs.getString("full_name");
             Date date = rs.getDate("date_of_birth");
             String number = rs.getString("contact_number");
