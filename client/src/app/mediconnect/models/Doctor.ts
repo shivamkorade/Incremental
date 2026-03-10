@@ -1,4 +1,4 @@
 
-export class Doctor {
- 
+export class Doctor{
+  
 }

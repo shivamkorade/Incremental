@@ -20,3 +20,7 @@ public interface AppointmentService {
     public List<Appointment> getAppointmentByStatus(String status);
 
 }
+
+
+
+

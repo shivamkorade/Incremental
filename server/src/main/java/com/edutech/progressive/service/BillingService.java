@@ -8,11 +8,11 @@ public interface BillingService {
 
     List<Billing> getAllBills();
 
-    Billing getBillById(Integer billingId);
+    Billing getBillById(int billingId);
 
     Integer createBill(Billing billing);
 
-    void deleteBill(Integer billingId);
+    void deleteBill(int billingId);
 
-    List<Billing> getBillsByPatientId(Integer patientId);
+    List<Billing> getBillsByPatientId(int patientId);
 }

@@ -9,9 +9,10 @@ import javax.persistence.Id;
 
 @Entity
 public class Patient implements Comparable<Patient> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer patientId;
+    private int patientId;
     private String fullName;
     private Date dateOfBirth;
     private String contactNumber;
@@ -21,14 +22,21 @@ public class Patient implements Comparable<Patient> {
     public Patient() {
     }
 
-    public Patient(int patientId, String fullName, Date dateOfBirth, String contactNumber, String email,
-            String address) {
+    public Patient(int patientId, String fullName, Date dateOfBirth, String contactNumber, String email, String address) {
         this.patientId = patientId;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.contactNumber = contactNumber;
         this.email = email;
         this.address = address;
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
     public String getFullName() {
@@ -72,22 +80,7 @@ public class Patient implements Comparable<Patient> {
     }
 
     @Override
-    public int compareTo(Patient o) {
-        return this.getFullName().compareTo(o.getFullName());
+    public int compareTo(Patient otherPatient) {
+        return this.getFullName().compareTo(otherPatient.getFullName());
     }
-
-    @Override
-    public String toString() {
-        return "Patient [patientId=" + patientId + ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth
-                + ", contactNumber=" + contactNumber + ", email=" + email + ", address=" + address + "]";
-    }
-
-    public Integer getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Integer patientId) {
-        this.patientId = patientId;
-    }
-
 }

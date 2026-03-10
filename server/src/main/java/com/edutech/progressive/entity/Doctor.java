@@ -1,37 +1,33 @@
 package com.edutech.progressive.entity;
 
+import java.util.Comparator;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 @Entity
-public class Doctor implements Comparable<Doctor>{
+@Table
+public class Doctor implements Comparable<Doctor> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue ( strategy = GenerationType.IDENTITY)
     private int doctorId;
     private String fullName;
     private String specialty;
     private String contactNumber;
     private String email;
     private int yearsOfExperience;
-
-    // --- Association: One Doctor has many Clinics ---
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    @JsonIgnore // avoid infinite recursion / large payloads in JSON
-    private List<Clinic> clinics = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "clinicId")
+    private Clinic clinic;
 
     public Doctor() {
     }
-    public Doctor(int doctorId, String fullName, String specialty, String contactNumber, String email,
-            int yearsOfExperience) {
+
+    public Doctor(int doctorId, String fullName, String specialty, String contactNumber, String email, int yearsOfExperience) {
         this.doctorId = doctorId;
         this.fullName = fullName;
         this.specialty = specialty;
@@ -39,59 +35,77 @@ public class Doctor implements Comparable<Doctor>{
         this.email = email;
         this.yearsOfExperience = yearsOfExperience;
     }
+    
+    
+    public Doctor(String fullName, String specialty, String contactNumber, String email, int yearsOfExperience,
+            Clinic clinic) {
+        this.fullName = fullName;
+        this.specialty = specialty;
+        this.contactNumber = contactNumber;
+        this.email = email;
+        this.yearsOfExperience = yearsOfExperience;
+        this.clinic = clinic;
+    }
+
     public int getDoctorId() {
         return doctorId;
     }
+
     public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
+
     public String getFullName() {
         return fullName;
     }
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
     public String getSpecialty() {
         return specialty;
     }
+
     public void setSpecialty(String specialty) {
         this.specialty = specialty;
     }
+
     public String getContactNumber() {
         return contactNumber;
     }
+
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public int getYearsOfExperience() {
         return yearsOfExperience;
     }
+
     public void setYearsOfExperience(int yearsOfExperience) {
         this.yearsOfExperience = yearsOfExperience;
     }
+    
 
-    public List<Clinic> getClinics() {
-        return clinics;
-    }
-    public void setClinics(List<Clinic> clinics) {
-        this.clinics = clinics;
+    public Clinic getClinic() {
+        return clinic;
     }
 
-    @Override
-    public int compareTo(Doctor o) {
-        return Integer.compare(this.getYearsOfExperience(), o.getYearsOfExperience());
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
     }
 
     @Override
-    public String toString() {
-        return "Doctor [doctorId=" + doctorId + ", fullName=" + fullName + ", specialty=" + specialty
-                + ", contactNumber=" + contactNumber + ", email=" + email + ", yearsOfExperience=" + yearsOfExperience
-                + "]";
+    public int compareTo(Doctor otherDoctor) {
+        return Integer.compare(yearsOfExperience, otherDoctor.getYearsOfExperience());
     }
 }

@@ -1,141 +1,162 @@
 package com.edutech.progressive.dao;
 
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
-
 import com.edutech.progressive.config.DatabaseConnectionManager;
 import com.edutech.progressive.entity.Patient;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PatientDAOImpl implements PatientDAO {
-    Connection connection;
-    
 
-    public PatientDAOImpl(){
+    @Override
+    public int addPatient(Patient patient) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        int generatedID = -1;
+
         try {
-            this.connection = DatabaseConnectionManager.getConnection();
+            connection = DatabaseConnectionManager.getConnection();
+            String sql = "INSERT INTO patient (full_name, date_of_birth, contact_number, email, address) VALUES (?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            statement.setString(1, patient.getFullName());
+            statement.setDate(2, new java.sql.Date(patient.getDateOfBirth().getTime())); // Convert java.util.Date to java.sql.Date
+            statement.setString(3, patient.getContactNumber());
+            statement.setString(4, patient.getEmail());
+            statement.setString(5, patient.getAddress());
+
+            statement.executeUpdate();
+
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                generatedID = resultSet.getInt(1);
+                patient.setPatientId(generatedID); // Set the generated ID back to the Patient object
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error adding patient: " + e.getMessage());
+            throw e; // Rethrow exception for the calling layer
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
         }
+        return generatedID;
     }
-    
 
     @Override
-    public Integer addPatient(Patient patient) throws SQLException {
-        String sql = "insert into patient (full_name,date_of_birth,contact_number,email,address) values (?,?,?,?,?)";
-        java.util.Date dob = patient.getDateOfBirth();
-        PreparedStatement smt;
-            smt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-            smt.setString(1,patient.getFullName());
-        smt.setDate(2,new java.sql.Date(dob.getTime()));
-        smt.setString(3,patient.getContactNumber());
-        smt.setString(4,patient.getEmail());
-        smt.setString(5,patient.getAddress());
-        Integer a = smt.executeUpdate();
+    public Patient getPatientById(int patientId) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-        ResultSet rs = smt.getGeneratedKeys();
-        if(rs.next()){
-            Integer i = rs.getInt(1);
-            patient.setPatientId(i);
-            return i;
-        }
-        
-        return -1;
-        
-        }
-       
-    
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            String sql = "SELECT * FROM patient WHERE patient_id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, patientId);
+            resultSet = statement.executeQuery();
 
-    @Override
-    public Patient getPatientById(Integer patientId) throws SQLException {
-        String sql = "Select * from patient where patient_id=?";
-        PreparedStatement smt = connection.prepareStatement(sql);
-        smt.setInt(1, patientId);
-        ResultSet rs = smt.executeQuery();
-        if(rs.next()){
-            Integer id = rs.getInt("patient_id");
-            String name = rs.getString("full_name");
-            Date date = rs.getDate("date_of_birth");
-            String number = rs.getString("contact_number");
-            String email = rs.getString("email");
-            String address = rs.getString("address");
+            if (resultSet.next()) {
+                String fullName = resultSet.getString("full_name");
+                java.util.Date dateOfBirth = resultSet.getDate("date_of_birth");
+                String contactNumber = resultSet.getString("contact_number");
+                String email = resultSet.getString("email");
+                String address = resultSet.getString("address");
 
-            Patient patient = new Patient(id, name, date, number, email, address);
-            return patient;
+                return new Patient(patientId, fullName, dateOfBirth, contactNumber, email, address);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching patient by ID: " + e.getMessage());
+            throw e;
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
         }
-        return null;
+        return null; // Return null if no record is found
     }
 
     @Override
     public void updatePatient(Patient patient) throws SQLException {
-        java.util.Date dob = patient.getDateOfBirth();
-        Integer i=0;
-        for(Patient p:getAllPatients()){
-             if(p.getPatientId()==patient.getPatientId())
-             {
-                i=1;
-                 String sql = "update patient set full_name=?,date_of_birth=?,contact_number=?,email=?,address=? where patient_id=?";
-        PreparedStatement smt = connection.prepareStatement(sql);
-        smt.setString(1,patient.getFullName());
-        smt.setDate(2,new java.sql.Date(dob.getTime()));
-        smt.setString(3,patient.getContactNumber());
-        smt.setString(4,patient.getEmail());
-        smt.setString(5,patient.getAddress());
-        smt.setInt(6,patient.getPatientId());
-        smt.executeUpdate();
-             }
-        }
-       
-        if(i==0){
-            throw new SQLException();
-        }
+        Connection connection = null;
+        PreparedStatement statement = null;
 
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            String sql = "UPDATE patient SET full_name = ?, date_of_birth = ?, contact_number = ?, email = ?, address = ? WHERE patient_id = ?";
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, patient.getFullName());
+            statement.setDate(2, new java.sql.Date(patient.getDateOfBirth().getTime())); // Convert java.util.Date to java.sql.Date
+            statement.setString(3, patient.getContactNumber());
+            statement.setString(4, patient.getEmail());
+            statement.setString(5, patient.getAddress());
+            statement.setInt(6, patient.getPatientId());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error updating patient: " + e.getMessage());
+            throw e; // Rethrow exception for the calling layer
+        } finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
     }
 
     @Override
-    public void deletePatient(Integer patientId) throws SQLException {
-        
-        // System.out.println(getAllPatients());
-        Integer i=0;
-        for(Patient p:getAllPatients()){
-            if(p.getPatientId()==patientId){
-                i=1;
-                String sql = "delete from patient where patient_id=?";
-                PreparedStatement smt = connection.prepareStatement(sql);
-                smt.setInt(1, patientId);
-                smt.executeUpdate();
-                
-            }
+    public void deletePatient(int patientId) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            String sql = "DELETE FROM patient WHERE patient_id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, patientId);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting patient: " + e.getMessage());
+            throw e; // Rethrow exception for the calling layer
+        } finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
         }
-        
-        if(i==0){
-            throw new SQLException();
-        }
-        
-        
     }
 
     @Override
     public List<Patient> getAllPatients() throws SQLException {
         List<Patient> patientList = new ArrayList<>();
-        String sql = "Select * from patient";
-        PreparedStatement smt = connection.prepareStatement(sql);
-        ResultSet rs = smt.executeQuery();
-        while(rs.next()){
-            Integer id = rs.getInt("patient_id");
-            String name = rs.getString("full_name");
-            Date date = rs.getDate("date_of_birth");
-            String number = rs.getString("contact_number");
-            String email = rs.getString("email");
-            String address = rs.getString("address");
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-            Patient patient = new Patient(id, name, date, number, email, address);
-            patientList.add(patient);
-            
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            String sql = "SELECT * FROM patient";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int patientId = resultSet.getInt("patient_id");
+                String fullName = resultSet.getString("full_name");
+                java.util.Date dateOfBirth = resultSet.getDate("date_of_birth");
+                String contactNumber = resultSet.getString("contact_number");
+                String email = resultSet.getString("email");
+                String address = resultSet.getString("address");
+
+                patientList.add(new Patient(patientId, fullName, dateOfBirth, contactNumber, email, address));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching all patients: " + e.getMessage());
+            throw e; // Rethrow exception for the calling layer
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
         }
         return patientList;
-        
     }
-    
-
 }

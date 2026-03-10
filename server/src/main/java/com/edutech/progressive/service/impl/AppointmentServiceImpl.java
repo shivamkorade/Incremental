@@ -1,21 +1,21 @@
 package com.edutech.progressive.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.entity.Appointment;
 import com.edutech.progressive.repository.AppointmentRepository;
 import com.edutech.progressive.service.AppointmentService;
 
-import java.util.List;
-
 @Service
-public class AppointmentServiceImpl implements AppointmentService {
+public class AppointmentServiceImpl implements AppointmentService{
 
-    private final AppointmentRepository appointmentRepository;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository) {
-        this.appointmentRepository = appointmentRepository;
-    }
-
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+    
     @Override
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -23,40 +23,45 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public int createAppointment(Appointment appointment) {
-        Appointment saved = appointmentRepository.save(appointment);
-        return saved.getAppointmentId(); // return generated ID
+        return appointmentRepository.save(appointment).getAppointmentId();
     }
 
     @Override
     public void updateAppointment(Appointment appointment) {
-        Appointment existing = appointmentRepository.findById(appointment.getAppointmentId())
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-        existing.setAppointmentDate(appointment.getAppointmentDate());
-        existing.setStatus(appointment.getStatus());
-        existing.setPurpose(appointment.getPurpose());
-        existing.setClinic(appointment.getClinic());
-        existing.setPatient(appointment.getPatient());
-        appointmentRepository.save(existing);
+        Appointment oldAppointment = appointmentRepository.findById(appointment.getAppointmentId()).orElseThrow();
+        oldAppointment.setAppointmentDate(appointment.getAppointmentDate());
+        oldAppointment.setClinic(appointment.getClinic());
+        oldAppointment.setPatient(appointment.getPatient());
+        oldAppointment.setPurpose(appointment.getPurpose());
+        oldAppointment.setStatus(appointment.getStatus());
+        appointmentRepository.save(oldAppointment);
     }
 
     @Override
     public Appointment getAppointmentById(int appointmentId) {
-        return appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        return appointmentRepository.findById(appointmentId).orElseThrow();
     }
 
     @Override
     public List<Appointment> getAppointmentByClinic(int clinicId) {
-        return appointmentRepository.findByClinic_ClinicId(clinicId);
+        // return ar.findByClinicId(clinicId);
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAppointmentByClinic'");
     }
 
     @Override
     public List<Appointment> getAppointmentByPatient(int patientId) {
-        return appointmentRepository.findByPatient_PatientId(patientId);
+        // return ar.findByPatientId(patientId);
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAppointmentByPatient'");
     }
 
     @Override
     public List<Appointment> getAppointmentByStatus(String status) {
         return appointmentRepository.findByStatus(status);
     }
+
 }
+
+
+

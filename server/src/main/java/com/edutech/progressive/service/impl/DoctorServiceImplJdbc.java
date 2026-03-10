@@ -1,80 +1,78 @@
 package com.edutech.progressive.service.impl;
-
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-
-import com.edutech.progressive.dao.DoctorDAOImpl;
+import com.edutech.progressive.dao.DoctorDAO;
+import com.edutech.progressive.entity.Clinic;
 import com.edutech.progressive.entity.Doctor;
 import com.edutech.progressive.service.DoctorService;
 
+import javax.print.Doc;
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+
 public class DoctorServiceImplJdbc implements DoctorService {
 
-    DoctorDAOImpl impl =new DoctorDAOImpl();
-    
+    private DoctorDAO doctorDAO;
 
-    public DoctorServiceImplJdbc(DoctorDAOImpl impl) {
-        this.impl = impl;
+    public DoctorServiceImplJdbc(DoctorDAO doctorDAO) {
+        this.doctorDAO = doctorDAO;
     }
 
     @Override
-    public List<Doctor> getAllDoctors() {
+    public List<Doctor> getAllDoctors() throws Exception {
         try {
-            return impl.getAllDoctors();
+            return doctorDAO.getAllDoctors();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error fetching all doctors", e);
         }
-        return null;
     }
 
     @Override
-    public Integer addDoctor(Doctor doctor) {
+    public Doctor getDoctorById(int doctorId) throws Exception {
         try {
-            return impl.addDoctor(doctor);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Doctor doctor = doctorDAO.getDoctorById(doctorId);
+            return doctor;
+        } catch (Exception e) {
+            throw new Exception("Error fetching doctor with ID " + doctorId, e);
         }
-        return -1;
     }
-
 
     @Override
-    public List<Doctor> getDoctorSortedByExperience() {
-        List<Doctor> doctor;
+    public Integer addDoctor(Doctor doctor) throws Exception {
         try {
-            doctor = impl.getAllDoctors();
-             Collections.sort(doctor);
-        return doctor;
+            return doctorDAO.addDoctor(doctor);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error adding doctor: " + doctor.getFullName(), e);
         }
-        return null;
-       
     }
 
-    public Doctor getDoctorById(int doctorId){
+    @Override
+    public List<Doctor> getDoctorSortedByExperience() throws Exception {
         try {
-            return impl.getDoctorById(doctorId);
+            List<Doctor> sortedDoctors = doctorDAO.getAllDoctors();
+            if (!sortedDoctors.isEmpty()) {
+                sortedDoctors.sort(Comparator.comparing(Doctor::getYearsOfExperience));
+            }
+            return sortedDoctors;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error fetching doctors sorted by experience ", e);
         }
-        return null;
-    }
-    public void updateDoctor(Doctor doctor){
-        try {
-            impl.updateDoctor(doctor);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-    }
-    public void deleteDoctor(int doctorId){
-        try {
-            impl.deleteDoctor(doctorId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
+    @Override
+    public void updateDoctor(Doctor doctor) throws Exception {
+        try {
+            doctorDAO.updateDoctor(doctor);
+        } catch (SQLException e) {
+            throw new Exception("Error updating doctor with ID " + doctor.getDoctorId(), e);
+        }
+    }
+
+    @Override
+    public void deleteDoctor(int doctorId) throws Exception {
+        try {
+            doctorDAO.deleteDoctor(doctorId);
+        } catch (SQLException e) {
+            throw new Exception("Error deleting doctor with ID " + doctorId, e);
+        }
+    }
 }

@@ -1,78 +1,117 @@
+
+
+
 package com.edutech.progressive.service.impl;
 
 import com.edutech.progressive.dto.DoctorDTO;
 import com.edutech.progressive.entity.Doctor;
+import com.edutech.progressive.entity.User;
 import com.edutech.progressive.exception.DoctorAlreadyExistsException;
+import com.edutech.progressive.repository.AppointmentRepository;
+import com.edutech.progressive.repository.ClinicRepository;
 import com.edutech.progressive.repository.DoctorRepository;
+import com.edutech.progressive.repository.UserRepository;
 import com.edutech.progressive.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class DoctorServiceImplJpa implements DoctorService {
 
-    private final DoctorRepository doctorRepository;
+    DoctorRepository doctorRepository;
 
-    // DaySevenTest calls: new DoctorServiceImplJpa(mockRepo)
-    @Autowired // optional for Spring, but fine to keep
+    @Autowired
+    ClinicRepository clinicRepository;
+
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
     public DoctorServiceImplJpa(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
     }
 
-    // ---------- DoctorService methods (JPA-backed) ----------
-
     @Override
-    public List<Doctor> getAllDoctors() {
+    public List<Doctor> getAllDoctors() throws Exception {
         return doctorRepository.findAll();
     }
 
     @Override
-    public Integer addDoctor(Doctor doctor) {
-        // Doctor saved = doctorRepository.save(doctor);
-        // return saved.getDoctorId();
-        if (doctorRepository.findByEmail(doctor.getEmail()).isPresent()) 
-            { 
-                throw new DoctorAlreadyExistsException("Doctor already exists with email: " + doctor.getEmail()); 
-        } 
-        return doctor.getDoctorId();
+    public Integer addDoctor(Doctor doctor) throws Exception {
+        Doctor existingDoctor = doctorRepository.findByEmail(doctor.getEmail());
+        if (existingDoctor != null) {
+            throw new DoctorAlreadyExistsException("Doctor with email " + doctor.getEmail() + " already exists");
+        }
+        return doctorRepository.save(doctor).getDoctorId();
     }
 
     @Override
-    public List<Doctor> getDoctorSortedByExperience() {
-        // Ascending to match Comparable<Doctor>. If test expects DESC, change to DESC.
-        return doctorRepository.findAll(Sort.by(Sort.Direction.ASC, "yearsOfExperience"));
+    public List<Doctor> getDoctorSortedByExperience() throws Exception {
+        List<Doctor> doctorList = doctorRepository.findAll();
+        doctorList.sort(Comparator.comparing(Doctor::getYearsOfExperience));
+        return doctorList;
     }
 
     @Override
-    public void updateDoctor(Doctor doctor) {
-        // save() will insert or update depending on id presence
-        doctorRepository.save(doctor);
+    public void modifyDoctorDetails(DoctorDTO doctorDTO) throws Exception {
+        Doctor existingDoctor = doctorRepository.findByEmail(doctorDTO.getEmail());
+        User doctorUser = userRepository.findByDoctorId(doctorDTO.getDoctorId());
+        if (existingDoctor != null && existingDoctor.getDoctorId() != doctorDTO.getDoctorId()) {
+            throw new DoctorAlreadyExistsException("Doctor with email " + doctorDTO.getEmail() + " already exists");
+            // throw new DoctorAlreadyExistsException
+        }
+        User user = userRepository.findByUsername(doctorDTO.getUsername());
+        if (user != null && user.getDoctor().getDoctorId() != doctorDTO.getDoctorId()) {
+            throw new DoctorAlreadyExistsException("User with username " + doctorDTO.getEmail() + " already exists");
+        }
+        else {
+            doctorUser.setUsername(doctorDTO.getUsername());
+        }
+        if (!doctorUser.getPassword().equals(doctorDTO.getPassword())) {
+            doctorUser.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
+        }
+        userRepository.save(doctorUser);
+        Doctor doctorEntity = new Doctor();
+        doctorEntity.setDoctorId(doctorDTO.getDoctorId());
+        doctorEntity.setFullName(doctorDTO.getFullName());
+        doctorEntity.setEmail(doctorDTO.getEmail());
+        doctorEntity.setContactNumber(doctorDTO.getContactNumber());
+        doctorEntity.setSpecialty(doctorDTO.getSpecialty());
+        doctorEntity.setYearsOfExperience(doctorDTO.getYearsOfExperience());
+        doctorRepository.save(doctorEntity);
     }
 
     @Override
-    public void deleteDoctor(int doctorId) {
+    public void deleteDoctor(int doctorId) throws Exception {
+        // appointmentRepository.deleteByDoctorId(doctorId);
+        clinicRepository.deleteByDoctorId(doctorId);
+        userRepository.deleteByDoctorId(doctorId);
         doctorRepository.deleteById(doctorId);
     }
 
     @Override
-    public Doctor getDoctorById(int doctorId) {
-        // You already have this derived query in the repository
-        // return doctorRepository.findByDoctorId(doctorId);
-        return doctorRepository.findById(doctorId) .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + doctorId));
+    public Doctor getDoctorById(int doctorId) throws Exception {
+        return doctorRepository.findByDoctorId(doctorId);
     }
 
-    // Do not implement until day-13 (interface already provides a default no-op)
     @Override
-    public void modifyDoctorDetails(DoctorDTO doctorDTO) {
-        // intentionally left blank for future enhancement
-    }
-
-    // Convenience overload if a controller wants to set id from path explicitly
-    public void updateDoctor(int doctorId, Doctor doctor) {
-        doctor.setDoctorId(doctorId);
-        doctorRepository.save(doctor);
+    public void updateDoctor(Doctor doctor) throws Exception {
+        Doctor oldDoctor = doctorRepository.findById(doctor.getDoctorId()).orElseThrow();
+        oldDoctor.setFullName(doctor.getFullName());
+        oldDoctor.setSpecialty(doctor.getSpecialty());
+        oldDoctor.setContactNumber(doctor.getContactNumber());
+        oldDoctor.setEmail(doctor.getEmail());
+        oldDoctor.setYearsOfExperience(doctor.getYearsOfExperience());
+        doctorRepository.save(oldDoctor);
     }
 }

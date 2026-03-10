@@ -1,4 +1,4 @@
 
-export class DoctorDTO {
-
+export class DoctorDTO{
+  
 }

@@ -1,14 +1,16 @@
 package com.edutech.progressive.repository;
 
-import com.edutech.progressive.entity.Doctor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import com.edutech.progressive.entity.Doctor;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
-
-    Doctor findByDoctorId(Integer doctorId);
-
-    Optional<Doctor> findByEmail(String email);
+@Repository
+public interface DoctorRepository extends JpaRepository<Doctor, Integer>{
+    Doctor findByEmail(String email);
+    Doctor findByDoctorId(int doctorId);
+    // List<Doctor> findAllByOrderByExperienceDesc();
 }

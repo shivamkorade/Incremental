@@ -1,0 +1,134 @@
+<!-- 
+   <div class="registration-container">
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label>Username:</label>
+        <input type="text" formControlName="username" />
+      </div>
+  
+      <div>
+        <label>Password:</label>
+        <input type="password" formControlName="password" />
+      </div>
+  
+      <div>
+        <label>Role:</label>
+        <select formControlName="role">
+          <option value="DOCTOR">Doctor</option>
+          <option value="PATIENT">Patient</option>
+        </select>
+      </div>
+  
+      <div>
+        <label>Full Name:</label>
+        <input type="text" formControlName="fullName" />
+      </div>
+  
+      <div>
+        <label>Contact Number:</label>
+        <input type="text" formControlName="contactNumber" />
+      </div>
+  
+      <div>
+        <label>Email:</label>
+        <input type="email" formControlName="email" />
+      </div>
+  
+      <div>
+        <label>Specialty:</label>
+        <input type="text" formControlName="specialty" />
+      </div>
+  
+      <div>
+        <label>Years of Experience:</label>
+        <input type="number" formControlName="yearsOfExperience" />
+      </div>
+  
+      <button type="submit">Register</button>
+    </form>
+  
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  </div>
+   -->
+
+
+
+   <div class="registration-form">
+    <h2>Register</h2>
+  
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+     
+      <div>
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" />
+      </div>
+  
+      
+      <div>
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
+  
+      
+      <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" />
+      </div>
+  
+      
+      <div>
+        <label for="role">Role</label>
+        <select id="role" formControlName="role">
+          <option value="" disabled>Select Role</option>
+          <option value="DOCTOR">Doctor</option>
+          <option value="PATIENT">Patient</option>
+        </select>
+      </div>
+  
+      
+      <div>
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" formControlName="fullName" />
+      </div>
+  
+      <div>
+        <label for="contactNumber">Contact Number</label>
+        <input id="contactNumber" type="text" formControlName="contactNumber" />
+      </div>
+  
+      <div>
+        <label for="specialty">Specialty</label>
+        <input id="specialty" type="text" formControlName="specialty" />
+      </div>
+  
+      <div>
+        <label for="yearsOfExperience">Years of Experience</label>
+        <input id="yearsOfExperience" type="number" formControlName="yearsOfExperience" />
+      </div>
+  
+      <div>
+        <label for="dateOfBirth">Date of Birth</label>
+        <input id="dateOfBirth" type="date" formControlName="dateOfBirth" />
+      </div>
+  
+      <div>
+        <label for="address">Address</label>
+        <textarea id="address" formControlName="address"></textarea>
+      </div>
+  
+      <button type="submit">Register</button>
+      <div class="text-center mt-3">
+        <p>Already have an account?
+          <a routerLink="/login">Login here</a>
+        </p>
+      </div>
+    </form>
+  
+    
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  
+
+  

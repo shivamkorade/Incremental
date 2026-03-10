@@ -1,71 +1,63 @@
 package com.edutech.progressive.service.impl;
 
+import java.util.List;
+
+import com.edutech.progressive.dao.ClinicDAO;
+import com.edutech.progressive.entity.Clinic;
+import com.edutech.progressive.service.ClinicService;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.edutech.progressive.dao.ClinicDAOImpl;
-import com.edutech.progressive.entity.Clinic;
-import com.edutech.progressive.service.ClinicService;
-
 public class ClinicServiceImplJdbc implements ClinicService {
 
-    private final ClinicDAOImpl impl;
-
-    public ClinicServiceImplJdbc(ClinicDAOImpl impl) {
-        this.impl = impl;
+    private final ClinicDAO clinicDAO;
+    public ClinicServiceImplJdbc(ClinicDAO clinicDAO) {
+        this.clinicDAO = clinicDAO;
     }
 
     @Override
-    public List<Clinic> getAllClinics() {
+    public List<Clinic> getAllClinics() throws Exception {
         try {
-            return impl.getAllClinics();
+            return clinicDAO.getAllClinics();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error fetching all clinics", e);
         }
-        return null; // or Collections.emptyList();
     }
 
     @Override
-    public Clinic getClinicById(int clinicId) {
+    public Clinic getClinicById(int clinicId) throws Exception {
         try {
-            // DAO returns a Clinic or throws; return null if not found/exception
-            return impl.getClinicById(clinicId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer addClinic(Clinic clinic) {
-        try {
-            return impl.addClinic(clinic);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    @Override
-    public void updateClinic(Clinic clinic) {
-        try {
-            impl.updateClinic(clinic);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        // Silently ignore on exception to match common academy tests
-    }
-
-    @Override
-    public void deleteClinic(int clinicId) {
-        try {
-            impl.deleteClinic(clinicId);
+            Clinic clinic = clinicDAO.getClinicById(clinicId);
+            return clinic;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception("Error fetching clinic with ID " + clinicId, e);
         }
-        // Silently ignore on exception to match common academy tests
     }
 
-    // Do NOT implement getAllClinicByLocation / getAllClinicByDoctorId here,
-    // per the instruction in ClinicService.
-} 
+    @Override
+    public Integer addClinic(Clinic clinic) throws Exception {
+        try {
+            return clinicDAO.addClinic(clinic);
+        } catch (SQLException e) {
+            throw new Exception("Error adding clinic: " + clinic.getClinicName(), e);
+        }
+    }
+
+    @Override
+    public void updateClinic(Clinic clinic) throws Exception {
+        try {
+            clinicDAO.updateClinic(clinic);
+        } catch (SQLException e) {
+            throw new Exception("Error updating clinic with ID " + clinic.getClinicId(), e);
+        }
+    }
+
+    @Override
+    public void deleteClinic(int clinicId) throws Exception {
+        try {
+            clinicDAO.deleteClinic(clinicId);
+        } catch (SQLException e) {
+            throw new Exception("Error deleting clinic with ID " + clinicId, e);
+        }
+    }
+}

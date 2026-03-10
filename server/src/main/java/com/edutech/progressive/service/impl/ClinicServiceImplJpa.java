@@ -1,73 +1,72 @@
 package com.edutech.progressive.service.impl;
 
-import com.edutech.progressive.entity.Clinic;
-import com.edutech.progressive.exception.ClinicAlreadyExistsException;
-import com.edutech.progressive.repository.ClinicRepository;
-import com.edutech.progressive.service.ClinicService;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.edutech.progressive.entity.Clinic;
+import com.edutech.progressive.repository.ClinicRepository;
+import com.edutech.progressive.service.ClinicService;
 
 @Service
 public class ClinicServiceImplJpa implements ClinicService {
 
-    private final ClinicRepository clinicRepository;
 
-    // Prefer constructor injection (avoids double injection with @Autowired)
-    public ClinicServiceImplJpa(ClinicRepository clinicRepository) {
-        this.clinicRepository = clinicRepository;
+    @Autowired
+    ClinicRepository cr;
+
+    
+
+    public ClinicServiceImplJpa(ClinicRepository cr) {
+        this.cr = cr;
     }
 
     @Override
-    public List<Clinic> getAllClinics() {
-        return clinicRepository.findAll();
+    public List<Clinic> getAllClinics() throws Exception {
+     return cr.findAll();
     }
 
     @Override
-    public Clinic getClinicById(int clinicId) {
-        // Return null when not found (aligns with tests expecting Clinic, not Optional)
-        return clinicRepository.findByClinicId(clinicId).orElseThrow(()-> new RuntimeException("Clinic not found with id: "+clinicId));
-    }
-
-    @Override
-    public Integer addClinic(Clinic clinic) {
-        // Clinic saved = clinicRepository.save(clinic);
-        // return saved.getClinicId();
-        if (clinicRepository.findByClinicName(clinic.getClinicName()).isPresent()) 
-            { 
-                throw new ClinicAlreadyExistsException("Clinic already exists with name: " + clinic.getClinicName()); 
-            } 
-        return clinic.getClinicId();
-    }
-
-    @Override
-    public void updateClinic(Clinic clinic) {
-        Optional<Clinic> existing = clinicRepository.findByClinicId(clinic.getClinicId());
-        if (existing.isPresent()) {
-            Clinic c = existing.get();
-            c.setClinicName(clinic.getClinicName());
-            c.setLocation(clinic.getLocation());
-            c.setDoctorId(clinic.getDoctorId());
-            c.setContactNumber(clinic.getContactNumber());
-            c.setEstablishedYear(clinic.getEstablishedYear());
-            clinicRepository.save(c);
+    public Clinic getClinicById(int clinicId) throws Exception {
+        try {
+            return cr.findById(clinicId).orElseThrow();
+        } catch (Exception e) {
+            return null;
         }
-        // If not found, silently ignore (matches typical unit-test patterns).
     }
 
     @Override
-    public void deleteClinic(int clinicId) {
-        clinicRepository.deleteById(clinicId);
+    public Integer addClinic(Clinic clinic) throws Exception {
+     return cr.save(clinic).getClinicId();
+     
+    }
+
+    @Override
+    public void updateClinic(Clinic clinic) throws Exception {
+       Clinic d=cr.findById(clinic.getClinicId()).orElseThrow();
+       d.setClinicName(clinic.getClinicName());
+       d.setContactNumber(clinic.getContactNumber());
+       d.setDoctorId(clinic.getDoctorId());
+       d.setEstablishedYear(clinic.getEstablishedYear());
+       d.setLocation(clinic.getLocation());
+       cr.save(d);
+    }
+
+    @Override
+    public void deleteClinic(int clinicId) throws Exception {
+       cr.deleteById(clinicId);
     }
 
     @Override
     public List<Clinic> getAllClinicByLocation(String location) {
-        return clinicRepository.findAllByLocation(location);
+    return cr.findByLocation(location);
     }
 
     @Override
     public List<Clinic> getAllClinicByDoctorId(int doctorId) {
-        return clinicRepository.findAllByDoctorId(doctorId);
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllClinicByDoctorId'");
     }
-} 
+
+}

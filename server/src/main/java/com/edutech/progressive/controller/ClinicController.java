@@ -2,112 +2,57 @@ package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Clinic;
 import com.edutech.progressive.service.ClinicService;
+import com.edutech.progressive.service.impl.ClinicServiceImplJpa;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/clinic")
 public class ClinicController {
-
-    private final ClinicService clinicService;
-
-    // Prefer constructor injection for testability and immutability
-    public ClinicController(ClinicService clinicService) {
-        this.clinicService = clinicService;
+    @Autowired
+    ClinicServiceImplJpa c;
+    
+    public ClinicController(ClinicServiceImplJpa c) {
+        this.c = c;
     }
-
-    // ✅ GET /clinic — Returns 200 or 500
     @GetMapping
-    public ResponseEntity<?> getAllClinics() {
-        try {
-            List<Clinic> clinics = clinicService.getAllClinics();
-            return ResponseEntity.ok(clinics);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error fetching clinics");
-        }
+    public ResponseEntity<List<Clinic>> getAllClinics() throws Exception {
+        return new ResponseEntity<>(c.getAllClinics(),HttpStatus.OK);
     }
 
-    // ✅ GET /clinic/{clinicId} — Returns 200 or 500
-    @GetMapping("/{clinicId}")
-    public ResponseEntity<?> getClinicById(@PathVariable int clinicId) {
-        try {
-            // Service returns Clinic (nullable), not Optional
-            Clinic clinic = clinicService.getClinicById(clinicId);
-
-            // Evaluators often accept 200 even if null is returned
-            return ResponseEntity.ok(clinic);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error fetching clinic");
-        }
+    public ResponseEntity<Clinic> getClinicById(int clinicId) throws Exception {
+        return new ResponseEntity<>(c.getClinicById(clinicId),HttpStatus.OK);
     }
 
-    // ✅ POST /clinic — Returns 201 or 500
     @PostMapping
-    public ResponseEntity<?> addClinic(@RequestBody Clinic clinic) {
-        try {
-            Integer id = clinicService.addClinic(clinic);
-            return ResponseEntity.status(HttpStatus.CREATED).body(id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error adding clinic");
-        }
+    public ResponseEntity<Integer> addClinic(@RequestBody Clinic clinic) throws Exception {
+        return new ResponseEntity<>(c.addClinic(clinic),HttpStatus.CREATED);
     }
 
-    // ✅ PUT /clinic/{clinicId} — Returns 200 or 500
-    @PutMapping("/{clinicId}")
-    public ResponseEntity<?> updateClinic(@PathVariable int clinicId,
-                                          @RequestBody Clinic clinic) {
-        try {
-            clinic.setClinicId(clinicId); // ensure path id and body id are synced
-            clinicService.updateClinic(clinic);
-            return ResponseEntity.ok("Clinic updated");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error updating clinic");
-        }
+    public ResponseEntity<Void> updateClinic(int clinicId, Clinic clinic) throws Exception {
+        c.updateClinic(clinic);
+       return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // ✅ DELETE /clinic/{clinicId} — Returns 200 or 500
-    @DeleteMapping("/{clinicId}")
-    public ResponseEntity<?> deleteClinic(@PathVariable int clinicId) {
-        try {
-            clinicService.deleteClinic(clinicId);
-            // Use 200 OK on success (NOT 401)
-            return ResponseEntity.ok("Clinic deleted");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error deleting clinic");
-        }
+    public ResponseEntity<Void> deleteClinic(int clinicId) throws Exception {
+        c.deleteClinic(clinicId);
+       return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    // ✅ GET /clinic/location/{location} — Returns 200 or 500
     @GetMapping("/location/{location}")
-    public ResponseEntity<?> getAllClinicByLocation(@PathVariable String location) {
-        try {
-            List<Clinic> clinics = clinicService.getAllClinicByLocation(location);
-            return ResponseEntity.ok(clinics);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error fetching clinics by location");
-        }
+    public ResponseEntity<List<Clinic>> getAllClinicByLocation(@PathVariable String location) {
+        return new ResponseEntity<>(c.getAllClinicByLocation(location),HttpStatus.OK);
     }
 
-    // ✅ GET /clinic/doctor/{doctorId} — Returns 200 or 500
-    @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<?> getAllClinicByDoctorId(@PathVariable int doctorId) {
-        try {
-            List<Clinic> clinics = clinicService.getAllClinicByDoctorId(doctorId);
-            return ResponseEntity.ok(clinics);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error fetching clinics by doctor");
-        }
+    public ResponseEntity<List<Clinic>> getAllClinicByDoctorId(@PathVariable int doctorId) {
+        return new ResponseEntity<>(c.getAllClinicByDoctorId(doctorId),HttpStatus.OK);
     }
-} 
+}

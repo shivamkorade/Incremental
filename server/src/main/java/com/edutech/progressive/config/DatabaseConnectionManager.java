@@ -1,5 +1,6 @@
 package com.edutech.progressive.config;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -8,55 +9,27 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseConnectionManager {
-    
-private static final Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
-    // Loads properties from application.properties (Only once)
-    private static void loadProperties() {
-        if (!properties.isEmpty()) {
-            return; // Already loaded
-        }
-        try (InputStream input = DatabaseConnectionManager.class
-                .getClassLoader()
-                .getResourceAsStream("application.properties")) {
-
-            if (input == null) {
-                throw new RuntimeException("Unable to find application.properties");
+    static {
+        loadProperties();
+            }
+        
+            private static void loadProperties() {
+                try(InputStream input = DatabaseConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")){
+                    if(input == null){
+                        throw new IllegalStateException("resource.properties not found in classpath");
+                    }
+                    properties.load(input);
+                } catch(IOException e){
+                    throw new RuntimeException("Error loading properties file", e);
+                }
             }
 
-            properties.load(input);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading database configuration", e);
-        }
-    }
-
-    // Returns JDBC connection
-    // public static Connection getConnection() throws SQLException {
-    //     loadProperties(); // Load properties before creating connection
-
-        // String url = properties.getProperty("db.url");
-        // String username = properties.getProperty("db.username");
-        // String password = properties.getProperty("db.password");
-        // String driver = properties.getProperty("db.driver");
-
-       public static String url="jdbc:mysql://localhost:3306/mydb";
-       public static String username = "root";
-       public static String password ="root";
-
-    //     try {
-    //         Class.forName(driver); // Load driver
-    //     } catch (ClassNotFoundException e) {
-    //         throw new SQLException("Database Driver not found: " + driver, e);
-    //     }
-    //     return DriverManager.getConnection(url, username, password);
-    // }
-
-        public static Connection getConnection() throws SQLException{
-            return DriverManager.getConnection(url,username,password);
-        }
-
-    }
-// }
-
-
+            public static Connection getConnection() throws SQLException{
+                String url = properties.getProperty("spring.datasource.url");
+                String user = properties.getProperty("spring.datasource.username");
+                String password = properties.getProperty("spring.datasource.password");
+                return DriverManager.getConnection(url, user, password);
+            }
+}

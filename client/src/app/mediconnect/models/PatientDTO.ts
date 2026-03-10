@@ -1,4 +1,4 @@
 
-export class PatientDTO {
-
+export class PatientDTO{
+  
 }

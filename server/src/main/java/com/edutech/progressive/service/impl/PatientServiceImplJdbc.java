@@ -1,84 +1,77 @@
 package com.edutech.progressive.service.impl;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import com.edutech.progressive.dao.PatientDAOImpl;
+import com.edutech.progressive.dao.PatientDAO;
+import com.edutech.progressive.entity.Patient;
 import com.edutech.progressive.entity.Patient;
 import com.edutech.progressive.service.PatientService;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+
 public class PatientServiceImplJdbc implements PatientService {
+    private PatientDAO patientDAO;
 
-    PatientDAOImpl impl = new PatientDAOImpl();
-    
-    public PatientServiceImplJdbc(PatientDAOImpl impl) {
-        this.impl = impl;
+    public PatientServiceImplJdbc(PatientDAO patientDAO) {
+         this.patientDAO = patientDAO;
     }
 
     @Override
-    public List<Patient> getAllPatients() {
+    public List<Patient> getAllPatients() throws Exception {
         try {
-            return impl.getAllPatients();
+            return patientDAO.getAllPatients();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error fetching all patients", e);
         }
-        return null;
     }
 
     @Override
-    public Integer addPatient(Patient patient)  {
+    public Integer addPatient(Patient patient) throws Exception {
         try {
-            return impl.addPatient(patient);
+            return patientDAO.addPatient(patient);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new Exception("Error adding patient: " + patient.getFullName(), e);
         }
-        return -1;
     }
 
     @Override
-    public List<Patient> getAllPatientSortedByName() {
-        List<Patient> patient;
+    public List<Patient> getAllPatientSortedByName() throws Exception {
         try {
-            patient = impl.getAllPatients();
-            Collections.sort(patient);
+            List<Patient> sortedPatients = patientDAO.getAllPatients();
+            if (!sortedPatients.isEmpty()) {
+                sortedPatients.sort(Comparator.comparing(Patient::getFullName));
+            }
+            return sortedPatients;
+        } catch (SQLException e) {
+            throw new Exception("Error fetching patients sorted by Name ", e);
+        }
+    }
+
+    @Override
+    public void updatePatient(Patient patient) throws Exception {
+        try {
+            patientDAO.updatePatient(patient);
+        } catch (SQLException e) {
+            throw new Exception("Error updating patient with ID " + patient.getPatientId(), e);
+        }
+    }
+
+    @Override
+    public void deletePatient(int patientId) throws Exception {
+        try {
+            patientDAO.deletePatient(patientId);
+        } catch (SQLException e) {
+            throw new Exception("Error deleting patient with ID " + patientId, e);
+        }
+    }
+
+    @Override
+    public Patient getPatientById(int patientId) throws Exception {
+        try {
+            Patient patient = patientDAO.getPatientById(patientId);
             return patient;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new Exception("Error fetching patient with ID " + patientId, e);
         }
-        return null;
     }
-
-    public void updatePatient(Patient patient){
-          try {
-            impl.updatePatient(patient);
-          } catch (SQLException e) {
-            e.printStackTrace();
-          }
-    }
-
-    public void deletePatient(int patientId){
-           try {
-            impl.deletePatient(patientId);
-           } catch (SQLException e) {
-            e.printStackTrace();
-           }
-    }
-
-    public Patient getPatientById(int patientId){
-        try {
-            return impl.getPatientById(patientId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Patient getPatientByEmail(String email) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPatientByEmail'");
-    }
-    
 }
