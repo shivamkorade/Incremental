@@ -1,19 +1,25 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-import { MediConnectRoutingModule } from "./mediconnect-routing.module";
-import { ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { PatientCreateComponent } from './components/patientcreate/patientcreate.component';
+import { DoctorArrayComponent } from './components/doctorarray/doctorarray.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PatientCreateComponent,
+    DoctorArrayComponent
+  ],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    HttpClientModule,
+    FormsModule,          // ngModel + template-driven forms
+    ReactiveFormsModule,  // available for other components if needed
+    HttpClientModule
   ],
   exports: [
-    
+    PatientCreateComponent,
+    DoctorArrayComponent
   ]
 })
 export class MediconnectModule {}

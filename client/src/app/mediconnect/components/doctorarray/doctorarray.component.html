@@ -1,0 +1,29 @@
+<div class="doctor-list">
+  <div class="header">
+    <h2>Doctors</h2>
+    <button type="button" (click)="toggleDetails()">
+      {{ showDetails ? 'Hide Details' : 'Show Details' }}
+    </button>
+  </div>
+
+  <!-- Doctor list using *ngFor -->
+  <ul>
+    <li *ngFor="let doctor of doctors" class="doctor-card">
+      <div class="summary">
+        <div class="name">{{ doctor.fullName }}</div>
+        <div class="specialty">{{ doctor.specialty }}</div>
+      </div>
+
+      <!-- Conditional details using *ngIf -->
+      <div class="details" *ngIf="showDetails">
+        <div><strong>Contact Number:</strong> {{ doctor.contactNumber }}</div>
+        <div><strong>Email:</strong> {{ doctor.email }}</div>
+        <div><strong>Years of Experience:</strong> {{ doctor.yearsOfExperience }}</div>
+      </div>
+    </li>
+  </ul>
+
+  <div *ngIf="doctors?.length === 0" class="empty">
+    No doctors available.
+  </div>
+</div>

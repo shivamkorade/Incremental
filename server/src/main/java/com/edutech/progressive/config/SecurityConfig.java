@@ -43,20 +43,97 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/register", "/user/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/patient/**").hasAnyAuthority("PATIENT", "DOCTOR")
-                .antMatchers(HttpMethod.POST, "/patient/**").hasAuthority("DOCTOR")
-                .antMatchers(HttpMethod.PUT, "/patient/**").hasAuthority("PATIENT")
-                .antMatchers(HttpMethod.DELETE, "/patient/**").hasAuthority("PATIENT")
+                .antMatchers(HttpMethod.POST, "/patient/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
+                .antMatchers(HttpMethod.PUT, "/patient/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("PATIENT")
+                .antMatchers(HttpMethod.DELETE, "/patient/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("PATIENT")
                   .antMatchers(HttpMethod.GET, "/appointment/**").hasAnyAuthority("PATIENT", "DOCTOR")
-                .antMatchers(HttpMethod.POST, "/appointment/**").hasAuthority("PATIENT")
-                .antMatchers(HttpMethod.DELETE, "/appointment/**").hasAuthority("DOCTOR")
-                .antMatchers(HttpMethod.DELETE, "/clinic/**").hasAuthority("DOCTOR")
+                .antMatchers(HttpMethod.POST, "/appointment/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("PATIENT")
+                .antMatchers(HttpMethod.DELETE, "/appointment/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
+                .antMatchers(HttpMethod.DELETE, "/clinic/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
                 .antMatchers(HttpMethod.GET, "/doctor/**").hasAnyAuthority("PATIENT", "DOCTOR")
-                .antMatchers(HttpMethod.POST, "/doctor/**").hasAuthority("DOCTOR")
-                .antMatchers(HttpMethod.PUT, "/doctor/**").hasAuthority("DOCTOR")
-                .antMatchers(HttpMethod.DELETE, "/doctor/**").hasAuthority("DOCTOR")
+                .antMatchers(HttpMethod.POST, "/doctor/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
+                .antMatchers(HttpMethod.PUT, "/doctor/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
+                .antMatchers(HttpMethod.DELETE, "/doctor/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
                 .antMatchers(HttpMethod.GET, "/clinic/**").hasAnyAuthority("PATIENT", "DOCTOR")
-                .antMatchers(HttpMethod.POST, "/clinic/**").hasAuthority("DOCTOR")
-                .antMatchers(HttpMethod.PUT, "/clinic/**").hasAuthority("DOCTOR")
+                .antMatchers(HttpMethod.POST, "/clinic/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
+                .antMatchers(HttpMethod.PUT, "/clinic/**").ha<!-- Feedback - always in DOM -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>thority("DOCTOR")
                 .antMatchers("/billing/**").hasAnyAuthority("PATIENT", "DOCTOR")
                 .anyRequest().authenticated()
                 .and()

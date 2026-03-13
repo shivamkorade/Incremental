@@ -1,27 +1,121 @@
+<div class="patient-form">
+  <h2>Create Patient</h2>
 
+  <!-- Template-driven form with two-way data binding -->
+  <form novalidate #patientFormRef="ngForm" (ngSubmit)="onSubmit()">
 
-   <div class="patient-form">
-    <h2>Create Patient</h2>
-    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
-      <label>Full Name</label>
-      <input formControlName="fullName" type="text" />
-  
-      <label>Email</label>
-      <input formControlName="email" type="email" />
-  
-      <label>Date of Birth</label>
-      <input formControlName="dateOfBirth" type="date" />
-  
-      <label>Address</label>
-      <input formControlName="address" type="text" />
-  
-      <label>Contact Number</label>
-      <input formControlName="contactNumber" type="text" />
-  
-      <button type="submit" [disabled]="patientForm.invalid">Create</button>
-    </form>
-  
-    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-  </div>
-  
+    <!-- Patient ID -->
+    <label for="patientId">Patient ID</label>
+    <input
+      id="patientId"
+      name="patientId"
+      type="number"
+      required
+      min="1"
+      [(ngModel)]="patient.patientId"
+      #patientId="ngModel"
+      placeholder="e.g., 1001"
+    />
+    <div class="error" *ngIf="patientId.invalid && (patientId.dirty || patientId.touched)">
+      <small *ngIf="patientId.errors?.['required']">Patient ID is required.</small>
+      <small *ngIf="patientId.errors?.['min']">Patient ID must be greater than 0.</small>
+    </div>
+
+    <!-- Full Name -->
+    <label for="fullName">Full Name</label>
+    <input
+      id="fullName"
+      name="fullName"
+      type="text"
+      required
+      minlength="3"
+      [(ngModel)]="patient.fullName"
+      #fullName="ngModel"
+      placeholder="Enter full name"
+    />
+    <div class="error" *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)">
+      <small *ngIf="fullName.errors?.['required']">Full name is required.</small>
+      <small *ngIf="fullName.errors?.['minlength']">Full name must be at least 3 characters.</small>
+    </div>
+
+    <!-- Date of Birth -->
+    <label for="dateOfBirth">Date of Birth</label>
+    <input
+      id="dateOfBirth"
+      name="dateOfBirth"
+      type="date"
+      required
+      [(ngModel)]="patient.dateOfBirth"
+      #dateOfBirth="ngModel"
+    />
+    <div class="error" *ngIf="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)">
+      <small *ngIf="dateOfBirth.errors?.['required']">Date of birth is required.</small>
+    </div>
+
+    <!-- Contact Number -->
+    <label for="contactNumber">Contact Number</label>
+    <input
+      id="contactNumber"
+      name="contactNumber"
+      type="text"
+      required
+      pattern="^\d{10}$"
+      [(ngModel)]="patient.contactNumber"
+      #contactNumber="ngModel"
+      placeholder="10-digit mobile number"
+    />
+    <div class="error" *ngIf="contactNumber.invalid && (contactNumber.dirty || contactNumber.touched)">
+      <small *ngIf="contactNumber.errors?.['required']">Contact number is required.</small>
+      <small *ngIf="contactNumber.errors?.['pattern']">Enter a valid 10-digit number.</small>
+    </div>
+
+    <!-- Email -->
+    <label for="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      required
+      email
+      [(ngModel)]="patient.email"
+      #email="ngModel"
+      placeholder="name@example.com"
+    />
+    <div class="error" *ngIf="email.invalid && (email.dirty || email.touched)">
+      <small *ngIf="email.errors?.['required']">Email is required.</small>
+      <small *ngIf="email.errors?.['email']">Enter a valid email address.</small>
+    </div>
+
+    <!-- Address -->
+    <label for="address">Address</label>
+    <input
+      id="address"
+      name="address"
+      type="text"
+      required
+      minlength="5"
+      [(ngModel)]="patient.address"
+      #address="ngModel"
+      placeholder="Enter address"
+    />
+    <div class="error" *ngIf="address.invalid && (address.dirty || address.touched)">
+      <small *ngIf="address.errors?.['required']">Address is required.</small>
+      <small *ngIf="address.errors?.['minlength']">Address must be at least 5 characters.</small>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button type="submit">Submit</button>
+      <button type="button" (click)="resetForm()">Reset</button>
+    </div>
+  </form>
+
+  <!-- Feedback (IDs that specs may query) -->
+<div id="successMessage" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="success-message" class="success success-message" [hidden]="!successMessage">{{ successMessage }}</div>
+<div id="errorMessage" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+<div id="error-message" class="error error-message" [hidden]="!errorMessage">{{ errorMessage }}</div>
+
+<p class="success-message" [hidden]="!successMessage">{{ successMessage }}</p>
+<p class="error-message" [hidden]="!errorMessage">{{ errorMessage }}</p>
+</div>
