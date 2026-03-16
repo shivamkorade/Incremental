@@ -35,7 +35,7 @@ const routes: Routes = [
   },
   {
     path: 'mediconnect',
-    loadChildren: () => import('./mediconnect/mediconnect.module').then((m) => m.MediconnectModule),
+    loadChildren: () => import('./mediconnect/mediconnect.module').then((m) => m.MediConnectModule),
   },
   {
     path: '',
