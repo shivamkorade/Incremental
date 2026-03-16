@@ -1,4 +1,3 @@
- 
 import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -6,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HttpClientModule } from '@angular/common/http';
- 
+
 // Minimal placeholder components you can replace with real ones
 
 import { Component } from '@angular/core';
@@ -29,8 +28,8 @@ import { ClinicCreateComponent } from './components/cliniccreate/cliniccreate.co
 
 })
 
-export class DashboardComponent {}
- 
+export class DashboardComponent { }
+
 @Component({
 
   selector: 'mc-doctors',
@@ -39,8 +38,8 @@ export class DashboardComponent {}
 
 })
 
-export class DoctorsComponent {}
- 
+export class DoctorsComponent { }
+
 @Component({
 
   selector: 'mc-clinics',
@@ -49,8 +48,8 @@ export class DoctorsComponent {}
 
 })
 
-export class ClinicsComponent {}
- 
+export class ClinicsComponent { }
+
 @Component({
 
   selector: 'mc-appointments',
@@ -59,8 +58,8 @@ export class ClinicsComponent {}
 
 })
 
-export class AppointmentsComponent {}
- 
+export class AppointmentsComponent { }
+
 const routes: Routes = [
 
   { path: '', component: DashboardComponent },
@@ -69,12 +68,12 @@ const routes: Routes = [
 
   { path: 'clinics', component: ClinicsComponent },
 
-    // { path: 'patients', component: PatientsComponent },
- 
+  // { path: 'patients', component: PatientsComponent },
+
   // { path: 'appointments', component: AppointmentsComponent },
 
 ];
- 
+
 @NgModule({
 
   declarations: [
@@ -87,17 +86,16 @@ const routes: Routes = [
 
     // ClinicsComponent,
 
-    // AppointmentsComponent,
+    AppointmentsComponent,
 
     PatientCreateComponent,
 
-     DoctorCreateComponent
- 
+    DoctorCreateComponent
+
   ],
 
   imports: [CommonModule, HttpClientModule, ReactiveFormsModule, FormsModule],
 
 })
 
-export class MediConnectModule {}
- 
+export class MediConnectModule { }
