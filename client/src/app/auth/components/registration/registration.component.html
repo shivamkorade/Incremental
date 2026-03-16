@@ -1,134 +1,115 @@
-<!-- 
-   <div class="registration-container">
-    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-      <div>
-        <label>Username:</label>
-        <input type="text" formControlName="username" />
+<form class="form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+  <h2>Register</h2>
+
+  <div class="grid">
+    <div class="form-control">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Username" />
+      <div class="error" *ngIf="username?.touched && username?.invalid">
+        <span *ngIf="username?.errors?.['required']">Username is required.</span>
+        <span *ngIf="username?.errors?.['pattern']">Only letters and numbers are allowed.</span>
       </div>
-  
-      <div>
-        <label>Password:</label>
-        <input type="password" formControlName="password" />
+    </div>
+
+    <div class="form-control">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Password" />
+      <div class="error" *ngIf="password?.touched && password?.invalid">
+        <span *ngIf="password?.errors?.['required']">Password is required.</span>
+        <span *ngIf="password?.errors?.['minlength']">Minimum 8 characters.</span>
+        <span *ngIf="password?.errors?.['pattern']">Include at least one capital letter and one number.</span>
       </div>
-  
-      <div>
-        <label>Role:</label>
-        <select formControlName="role">
-          <option value="DOCTOR">Doctor</option>
-          <option value="PATIENT">Patient</option>
-        </select>
+    </div>
+
+    <div class="form-control">
+      <label for="role">Role</label>
+      <select id="role" formControlName="role" (change)="onRoleChange($event)">
+        <option value="">-- Select Role --</option>
+        <option value="DOCTOR">DOCTOR</option>
+        <option value="PATIENT">PATIENT</option>
+      </select>
+      <div class="error" *ngIf="role?.touched && role?.invalid">
+        <span *ngIf="role?.errors?.['required']">Role is required.</span>
       </div>
-  
-      <div>
-        <label>Full Name:</label>
-        <input type="text" formControlName="fullName" />
+    </div>
+
+    <div class="form-control">
+      <label for="fullName">Full Name</label>
+      <input id="fullName" type="text" formControlName="fullName" placeholder="Full Name" />
+      <div class="error" *ngIf="fullName?.touched && fullName?.invalid">
+        <span *ngIf="fullName?.errors?.['required']">Full name is required.</span>
       </div>
-  
-      <div>
-        <label>Contact Number:</label>
-        <input type="text" formControlName="contactNumber" />
+    </div>
+
+    <div class="form-control">
+      <label for="contactNumber">Contact Number</label>
+      <input id="contactNumber" type="text" formControlName="contactNumber" placeholder="10-digit number" />
+      <div class="error" *ngIf="contactNumber?.touched && contactNumber?.invalid">
+        <span *ngIf="contactNumber?.errors?.['required']">Contact number is required.</span>
+        <span *ngIf="contactNumber?.errors?.['pattern']">Enter a valid 10-digit number.</span>
       </div>
-  
-      <div>
-        <label>Email:</label>
-        <input type="email" formControlName="email" />
+    </div>
+
+    <div class="form-control">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="Email address" />
+      <div class="error" *ngIf="email?.touched && email?.invalid">
+        <span *ngIf="email?.errors?.['required']">Email is required.</span>
+        <span *ngIf="email?.errors?.['email']">Enter a valid email address.</span>
       </div>
-  
-      <div>
-        <label>Specialty:</label>
-        <input type="text" formControlName="specialty" />
-      </div>
-  
-      <div>
-        <label>Years of Experience:</label>
-        <input type="number" formControlName="yearsOfExperience" />
-      </div>
-  
-      <button type="submit">Register</button>
-    </form>
-  
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+    </div>
   </div>
-   -->
 
-
-
-   <div class="registration-form">
-    <h2>Register</h2>
-  
-    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-     
-      <div>
-        <label for="username">Username</label>
-        <input id="username" type="text" formControlName="username" />
-      </div>
-  
-      
-      <div>
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" />
-      </div>
-  
-      
-      <div>
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" />
-      </div>
-  
-      
-      <div>
-        <label for="role">Role</label>
-        <select id="role" formControlName="role">
-          <option value="" disabled>Select Role</option>
-          <option value="DOCTOR">Doctor</option>
-          <option value="PATIENT">Patient</option>
-        </select>
-      </div>
-  
-      
-      <div>
-        <label for="fullName">Full Name</label>
-        <input id="fullName" type="text" formControlName="fullName" />
-      </div>
-  
-      <div>
-        <label for="contactNumber">Contact Number</label>
-        <input id="contactNumber" type="text" formControlName="contactNumber" />
-      </div>
-  
-      <div>
+  <!-- Doctor-specific fields -->
+  <div *ngIf="selectedRole === 'DOCTOR'" class="role-panel">
+    <h3>Doctor Details</h3>
+    <div class="grid">
+      <div class="form-control">
         <label for="specialty">Specialty</label>
-        <input id="specialty" type="text" formControlName="specialty" />
+        <input id="specialty" type="text" formControlName="specialty" placeholder="e.g., Cardiologist" />
+        <div class="error" *ngIf="specialty?.touched && specialty?.invalid">
+          <span *ngIf="specialty?.errors?.['required']">Specialty is required.</span>
+        </div>
       </div>
-  
-      <div>
+
+      <div class="form-control">
         <label for="yearsOfExperience">Years of Experience</label>
-        <input id="yearsOfExperience" type="number" formControlName="yearsOfExperience" />
+        <input id="yearsOfExperience" type="number" formControlName="yearsOfExperience" placeholder="e.g., 5" />
+        <div class="error" *ngIf="yearsOfExperience?.touched && yearsOfExperience?.invalid">
+          <span *ngIf="yearsOfExperience?.errors?.['required']">Years of experience is required.</span>
+          <span *ngIf="yearsOfExperience?.errors?.['min']">Must be 0 or greater.</span>
+        </div>
       </div>
-  
-      <div>
+    </div>
+  </div>
+
+  <!-- Patient-specific fields -->
+  <div *ngIf="selectedRole === 'PATIENT'" class="role-panel">
+    <h3>Patient Details</h3>
+    <div class="grid">
+      <div class="form-control">
         <label for="dateOfBirth">Date of Birth</label>
         <input id="dateOfBirth" type="date" formControlName="dateOfBirth" />
+        <div class="error" *ngIf="dateOfBirth?.touched && dateOfBirth?.invalid">
+          <span *ngIf="dateOfBirth?.errors?.['required']">Date of birth is required.</span>
+        </div>
       </div>
-  
-      <div>
-        <label for="address">Address</label>
-        <textarea id="address" formControlName="address"></textarea>
-      </div>
-  
-      <button type="submit">Register</button>
-      <div class="text-center mt-3">
-        <p>Already have an account?
-          <a routerLink="/login">Login here</a>
-        </p>
-      </div>
-    </form>
-  
-    
-    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-  </div>
-  
 
-  
+      <div class="form-control">
+        <label for="address">Address</label>
+        <textarea id="address" formControlName="address" placeholder="Address"></textarea>
+        <div class="error" *ngIf="address?.touched && address?.invalid">
+          <span *ngIf="address?.errors?.['required']">Address is required.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" type="submit">Register</button>
+    <button class="btn outline" type="button" (click)="resetForm()">Reset</button>
+  </div>
+
+  <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+</form>
