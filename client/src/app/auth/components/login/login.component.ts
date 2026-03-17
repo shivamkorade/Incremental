@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent implements OnInit {
     errorMessage: string | null = null;
     successMessage: string | null = null;
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder,private authService: AuthService ) { }
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
@@ -53,8 +54,12 @@ export class LoginComponent implements OnInit {
         // });
 
         // For tests / no-backend scenario:
-        this.successMessage = 'Login successful!';
-        this.errorMessage = null;
+        // this.successMessage = 'Login successful!';
+        // this.errorMessage = null;
+        this.authService.login(this.loginForm.value).subscribe(() => {
+    this.successMessage = 'Login successful!';
+    this.errorMessage = null;
+});
     }
 
     // Convenience getters for template
