@@ -1,73 +1,25 @@
-<form class="appointment-form" [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" novalidate>
-    <h2>Create Appointment</h2>
-
-    <!-- Success / Error messages -->
-    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
-
-    <!-- Appointment ID -->
-    <div class="form-field">
-        <label for="appointmentId">Appointment ID</label>
-        <input id="appointmentId" type="number" formControlName="appointmentId" placeholder="Enter appointment ID" />
-        <div class="error-text" *ngIf="f.appointmentId.touched && f.appointmentId.errors">
-            <span *ngIf="f.appointmentId.errors['required']">Appointment ID is required.</span>
-            <span *ngIf="f.appointmentId.errors['min']">Appointment ID must be at least 1.</span>
-        </div>
-    </div>
-
-    <!-- Patient ID -->
-    <div class="form-field">
-        <label for="patientId">Patient ID</label>
-        <input id="patientId" type="number" formControlName="patientId" placeholder="Enter patient ID" />
-        <div class="error-text" *ngIf="f.patientId.touched && f.patientId.errors">
-            <span *ngIf="f.patientId.errors['required']">Patient ID is required.</span>
-            <span *ngIf="f.patientId.errors['min']">Patient ID must be at least 1.</span>
-        </div>
-    </div>
-
-    <!-- Clinic ID -->
-    <div class="form-field">
-        <label for="clinicId">Clinic ID</label>
-        <input id="clinicId" type="number" formControlName="clinicId" placeholder="Enter clinic ID" />
-        <div class="error-text" *ngIf="f.clinicId.touched && f.clinicId.errors">
-            <span *ngIf="f.clinicId.errors['required']">Clinic ID is required.</span>
-            <span *ngIf="f.clinicId.errors['min']">Clinic ID must be at least 1.</span>
-        </div>
-    </div>
-
-    <!-- Appointment Date -->
-    <div class="form-field">
-        <label for="appointmentDate">Appointment Date</label>
-        <input id="appointmentDate" type="date" formControlName="appointmentDate" />
-        <div class="error-text" *ngIf="f.appointmentDate.touched && f.appointmentDate.errors">
-            <span *ngIf="f.appointmentDate.errors['required']">Appointment date is required.</span>
-        </div>
-    </div>
 
 
-    <!-- Status -->
-    <div class="form-field">
-        <label for="status">Status</label>
-        <input id="status" type="text" formControlName="status"
-            placeholder="Enter status (e.g., SCHEDULED, COMPLETED, CANCELLED)" />
-        <div class="error-text" *ngIf="f.status.touched && f.status.errors">
-            <span *ngIf="f.status.errors['required']">Status is required.</span>
-        </div>
-    </div>
+<div class="appointment-form">
+  <h2>Book Appointment</h2>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <label>Clinic:</label>
+    <select formControlName="clinic">
+      <option *ngFor="let clinic of clinics" [ngValue]="clinic">{{ clinic.clinicName }}</option>
+    </select>
 
-    <!-- Purpose -->
-    <div class="form-field">
-        <label for="purpose">Purpose</label>
-        <textarea id="purpose" rows="3" formControlName="purpose"
-            placeholder="Enter purpose (min 5 characters)"></textarea>
-        <div class="error-text" *ngIf="f.purpose.touched && f.purpose.errors">
-            <span *ngIf="f.purpose.errors['required']">Purpose is required.</span>
-            <span *ngIf="f.purpose.errors['minlength']">Purpose must be at least 5 characters.</span>
-        </div>
-    </div>
+    <label>Date:</label>
+    <input type="date" formControlName="appointmentDate" />
 
-    <div class="actions">
-        <button class="btn primary" type="submit">Save</button>
-        <button class="btn secondary" type="button" (click)="resetForm()">Reset</button>
-    </div>
-</form>
+    <label>Status:</label>
+    <input type="text" formControlName="status" />
+
+    <label>Purpose:</label>
+    <input type="text" formControlName="purpose" />
+
+    <button type="submit">Book</button>
+  </form>
+
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

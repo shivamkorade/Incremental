@@ -1,22 +1,23 @@
-<div class="clinic-create">
-  <h2>Create Clinic</h2>
 
-  <form [formGroup]="clinicForm" (ngSubmit)="onSubmit()">
-    <label>Clinic Name</label>
-    <input formControlName="clinicName" type="text" />
-
-    <label>Location</label>
-    <input formControlName="location" type="text" />
-
-    <label>Contact Number</label>
-    <input formControlName="contactNumber" type="text" />
-
-    <label>Established Year</label>
-    <input formControlName="establishedYear" type="number" />
-
-    <button type="submit">Create</button>
-  </form>
-
-<div id="successMessage" class="success-message">{{ successMessage }}</div>
-<div id="errorMessage" class="error">{{ errorMessage }}</div>
-</div>
+   <div class="clinic-create">
+    <h2>Create Clinic</h2>
+    <form [formGroup]="clinicForm" (ngSubmit)="onSubmit()">
+      <label>Clinic Name</label>
+      <input formControlName="clinicName" type="text" />
+  
+      <label>Location</label>
+      <input formControlName="location" type="text" />
+  
+      <label>Contact Number</label>
+      <input formControlName="contactNumber" type="text" />
+  
+      <label>Established Year</label>
+      <input formControlName="establishedYear" type="number" />
+  
+      <button type="submit">Create</button>
+    </form>
+  
+    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  </div>
+  

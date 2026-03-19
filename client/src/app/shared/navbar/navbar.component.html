@@ -1,0 +1,31 @@
+  <nav>
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/clinic/create">Add Clinic</a>
+    <a routerLink="/patient/create">Add Patient</a>
+    <a routerLink="/doctor/create">Add Doctor</a>
+    <div class="nav-right">
+      <!-- Show Book Appointment only for patients -->
+      <button *ngIf="role === 'PATIENT'" (click)="bookAppointment()">
+        Book Appointment
+      </button>
+  
+      <button (click)="logout()">Logout</button>
+    </div>
+  </nav>
+   
+
+   <!-- <nav class="navbar">
+    <div class="nav-left">
+      <a (click)="goToDashboard()">Dashboard</a>
+    </div>
+  
+    <div class="nav-right">
+  
+      <button *ngIf="role === 'PATIENT'" (click)="bookAppointment()">
+        Book Appointment
+      </button>
+  
+      <button (click)="logout()">Logout</button>
+    </div>
+  </nav>-->
+  

@@ -1,0 +1,26 @@
+<div class="patient-edit-container">
+    <h2>Edit Profile</h2>
+  
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+      <label>Full Name:</label>
+      <input formControlName="fullName" type="text" />
+  
+      <label>Email:</label>
+      <input formControlName="email" type="email" />
+  
+      <label>Date of Birth:</label>
+      <input formControlName="dateOfBirth" type="date" />
+  
+      <label>Address:</label>
+      <input formControlName="address" type="text" />
+  
+      <label>Contact Number:</label>
+      <input formControlName="contactNumber" type="text" />
+  
+      <button type="submit" [disabled]="patientForm.invalid">Update Profile</button>
+    </form>
+  
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  

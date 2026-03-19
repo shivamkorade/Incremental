@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
- 
+
 @Component({
   selector: 'app-doctor-create',
   templateUrl: './doctorcreate.component.html',
@@ -10,12 +10,12 @@ export class DoctorCreateComponent implements OnInit {
   doctorForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
- 
+
   constructor(private formBuilder: FormBuilder) {}
- 
+
   ngOnInit(): void {
     this.doctorForm = this.formBuilder.group({
-      doctorId: ['1', [Validators.required, Validators.min(1)]],
+      doctorId: ['', [Validators.required, Validators.min(1)]],
       fullName: ['', [Validators.required, Validators.minLength(2)]],
       specialty: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -23,7 +23,7 @@ export class DoctorCreateComponent implements OnInit {
       yearsOfExperience: ['', [Validators.required, Validators.min(1)]],
     });
   }
- 
+
   onSubmit(): void {
     if (this.doctorForm.valid) {
       this.successMessage = 'Doctor has been successfully created!';
@@ -34,10 +34,11 @@ export class DoctorCreateComponent implements OnInit {
       this.successMessage = '';
     }
   }
- 
+
   resetForm(): void {
     this.doctorForm.reset();
     this.successMessage = '';
     this.errorMessage = '';
   }
 }
+

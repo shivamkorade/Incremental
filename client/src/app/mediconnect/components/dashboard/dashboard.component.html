@@ -1,0 +1,28 @@
+
+   <div class="dashboard">
+    <h2>Doctor Dashboard</h2>
+  
+    <button routerLink="/doctor-edit">Edit Profile</button>
+    <button (click)="deleteDoctor()">Delete Profile</button>
+  
+    <h3>Your Clinics</h3>
+    <ul>
+      <li *ngFor="let clinic of clinics">
+        {{ clinic.clinicName }} - {{ clinic.location }}
+        <button [routerLink]="['/clinic-edit', clinic.clinicId]">Edit</button>
+        <button (click)="deleteClinic(clinic.clinicId)">Delete</button>
+      </li>
+    </ul>
+  
+    <h3>Your Appointments</h3>
+    <ul>
+      <li *ngFor="let appt of appointments">
+        {{ appt.appointmentDate | date }} - {{ appt.status }} - {{ appt.purpose }}
+        <button (click)="cancelAppointment(appt)">Cancel</button>
+      </li>
+    </ul>
+  </div>
+   
+
+
+

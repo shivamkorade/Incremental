@@ -1,27 +1,27 @@
-<div class="doctor-form">
-  <h2>Create Doctor</h2>
 
-  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
-    <label>Full Name</label>
-    <input formControlName="fullName" type="text" />
 
-    <label>Email</label>
-    <input formControlName="email" type="email" />
-
-    <label>Specialty</label>
-    <input formControlName="specialty" type="text" />
-
-    <label>Years of Experience</label>
-    <input formControlName="yearsOfExperience" type="number" />
-
-    <label>Contact Number</label>
-    <input formControlName="contactNumber" type="text" />
-
-    <!-- FIXED: removed [disabled] -->
-    <button type="submit">Create</button>
-  </form>
-
-  <!-- FIXED: class matches spec exactly -->
-  <div id="successMessage" class="success-message">{{ successMessage }}</div>
-  <div id="errorMessage" class="error">{{ errorMessage }}</div>
-</div>
+   <div class="doctor-form">
+    <h2>Create Doctor</h2>
+    <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+      <label>Full Name</label>
+      <input formControlName="fullName" type="text" />
+  
+      <label>Email</label>
+      <input formControlName="email" type="email" />
+  
+      <label>Specialty</label>
+      <input formControlName="specialty" type="text" />
+  
+      <label>Years of Experience</label>
+      <input formControlName="yearsOfExperience" type="number" />
+  
+      <label>Contact Number</label>
+      <input formControlName="contactNumber" type="text" />
+  
+      <button type="submit" [disabled]="doctorForm.invalid">Create</button>
+    </form>
+  
+    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  </div>
+  
