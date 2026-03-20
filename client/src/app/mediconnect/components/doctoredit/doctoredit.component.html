@@ -1,0 +1,31 @@
+<div class="doctor-edit-container">
+    <h2>Edit Doctor Profile</h2>
+  
+    <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+      <label>Full Name:</label>
+      <input formControlName="fullName" type="text" />
+  
+      <label>Username:</label>
+      <input formControlName="username" type="text" />
+  
+      <label>Password:</label>
+      <input formControlName="password" type="password" />
+  
+      <label>Specialty:</label>
+      <input formControlName="specialty" type="text" />
+  
+      <label>Email:</label>
+      <input formControlName="email" type="email" />
+  
+      <label>Contact Number:</label>
+      <input formControlName="contactNumber" type="text" />
+  
+      <label>Years of Experience:</label>
+      <input formControlName="yearsOfExperience" type="number" />
+  
+      <button type="submit" [disabled]="doctorForm.invalid">Update Profile</button>
+    </form>
+  
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
