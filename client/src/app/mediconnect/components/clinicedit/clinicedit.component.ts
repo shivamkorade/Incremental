@@ -1,5 +1,8 @@
+import { Component } from '@angular/core';
 
-export class ClinicEditComponent {
- 
-
-}
+@Component({
+  selector: 'app-clinic-edit',
+  templateUrl: './clinicedit.component.html',
+  styleUrls: ['./clinicedit.component.scss']
+})
+export class ClinicEditComponent {}

@@ -1,127 +1,129 @@
+import { Component, OnInit } from '@angular/core';
+import { MediConnectService } from '../../services/mediconnect.service';
 
-// import { Component, OnInit } from '@angular/core';
-// import { MediConnectService } from '../../services/mediconnect.service';
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
+})
+export class DashboardComponent implements OnInit {
 
-// @Component({
-//   selector: 'app-dashboard',
-//   templateUrl: './dashboard.component.html',
-//   styleUrls: ['./dashboard.component.scss']
-// })
-// export class DashboardComponent implements OnInit {
-//   role: string = '';
-//   patientId!: number;
-//   patientDetails: any;
-//   clinics: any[] = [];
-//   appointments: any[] = [];
+  role: string = '';
 
-//   constructor(private mediConnectService: MediConnectService) {}
+  doctorId!: number;
+  patientId!: number;
 
-//   ngOnInit(): void {
-//     this.role = localStorage.getItem('role') || '';
-//     if (this.role === 'PATIENT') {
-//       this.patientId = Number(localStorage.getItem('patient_id'));
-//       this.loadPatientData();
-//     }
-//   }
+  doctorDetails: any;
+  patientDetails: any;
 
-//   loadPatientData(): void {
-//     if (!this.patientId) return;
+  clinics: any[] = [];
+  appointments: any[] = [];
 
-//     this.mediConnectService.getPatientById(this.patientId).subscribe({
-//       next: (patient) => {
-//         this.patientDetails = patient;
-//       },
-//       error: () => {
-//         this.patientDetails = undefined;
-//       }
-//     });
+  constructor(private service: MediConnectService) {}
 
-//     this.mediConnectService.getAppointmentsByPatient(this.patientId).subscribe({
-//       next: (appointments) => {
-//         this.appointments = appointments;
-//       }
-//     });
+  ngOnInit(): void {
+    this.role = localStorage.getItem('role') || '';
 
-//     this.mediConnectService.getAllClinics().subscribe({
-//       next: (clinics) => {
-//         this.clinics = clinics;
-//       }
-//     });
-//   }
+    // ✅ DOCTOR FLOW
+    if (this.role === 'DOCTOR') {
+      this.doctorId = Number(localStorage.getItem('userId'));
 
-//   deletePatient(): void {
-//     if (confirm('Are you sure you want to delete your profile?')) {
-//       this.mediConnectService.deletePatient(this.patientId).subscribe(() => {
-//         this.patientDetails = null;
-//       });
-//     }
-//   }
-// }
+      if (!this.doctorId) {
+        console.error('Doctor ID missing');
+        return;
+      }
 
+      this.loadDoctorData();
+    }
 
+    // ✅ PATIENT FLOW
+    if (this.role === 'PATIENT') {
+      this.patientId = Number(localStorage.getItem('userId'));
 
-import { Component, OnInit } from '@angular/core'; 
-import { MediConnectService } from '../../services/mediconnect.service'; 
+      if (!this.patientId) {
+        console.error('Patient ID missing');
+        return;
+      }
 
-@Component({ 
-  selector: 'app-dashboard', 
-  templateUrl: './dashboard.component.html', 
-  styleUrls: ['./dashboard.component.scss'] 
-}) 
-export class DashboardComponent implements OnInit { 
-  role: string = ''; 
-  doctorId!: number; 
-  doctorDetails: any; 
-  clinics: any[] = []; 
-  appointments: any[] = []; 
-  patientId!: number; 
-  constructor(private service: MediConnectService) {} 
-  
-  ngOnInit(): void { 
-    this.role = localStorage.getItem('role') || ''; 
-    
-    if (this.role === 'DOCTOR') { 
-      this.doctorId = Number(localStorage.getItem('user_id')); 
-      this.loadDoctorData(); 
-    } 
-  } 
+      this.loadPatientData();
+    }
+  }
 
-  // deletePatient(): void {
-  //       if (confirm('Are you sure you want to delete your profile?')) {
-  //         this.mediConnectService.deletePatient(this.patientId).subscribe(() => {
-  //           this.patientDetails = null;
-  //         });
-  //       }
-  //     }
+  // ================= DOCTOR =================
 
+  loadDoctorData(): void {
+    this.service.getDoctorById(this.doctorId).subscribe({
+    next: (doctor) => {
+    console.log("API doctor response:", doctor);
+    this.doctorDetails = doctor;
+    }
+    });
+    // Doctor details
+    this.service.getDoctorById(this.doctorId).subscribe({
+      next: (doctor) => this.doctorDetails = doctor,
+      error: () => this.doctorDetails = undefined
+    });
 
-    loadDoctorData(): void { 
-      this.service.getDoctorById(this.doctorId).subscribe({ next: (doctor) => (
-        this.doctorDetails = doctor), error: () => (this.doctorDetails = undefined) }); 
-        this.service.getClinicsByDoctorId(this.doctorId).subscribe({ next: (clinics) => (
-          this.clinics = clinics) 
-        }); 
-  } 
-        
-    deleteDoctor(): void { 
-      if (confirm('Are you sure you want to delete your profile?')) { 
-        this.service.deleteDoctor(this.doctorId).subscribe(() => { 
-          this.doctorDetails = null; 
-        }); 
-      } 
-  } 
-    deleteClinic(clinicId: number): void { 
-      if (confirm('Are you sure you want to delete this clinic?')) { 
-        this.service.deleteClinic(clinicId).subscribe(() => { 
-          this.clinics = this.clinics.filter((c) => c.clinicId !== clinicId); 
-        }); 
-      } 
-  } 
-            
-    cancelAppointment(appointment: any): void { 
-      if (confirm('Are you sure you want to cancel this appointment?')) { 
-        appointment.status = 'Cancelled'; 
-          this.service.updateAppointment(appointment).subscribe(); 
-      } 
-    } 
+    // Clinics
+    this.service.getClinicsByDoctorId(this.doctorId).subscribe({
+      next: (clinics) => this.clinics = clinics
+    });
+
+    // ✅ Appointments (FIXED)
+    this.service.getAppointmentsByDoctorId(this.doctorId).subscribe({
+      next: (appointments) => this.appointments = appointments
+    });
+  }
+
+  deleteDoctor(): void {
+    if (confirm('Are you sure you want to delete your profile?')) {
+      this.service.deleteDoctor(this.doctorId).subscribe(() => {
+        this.doctorDetails = null;
+      });
+    }
+  }
+
+  deleteClinic(clinicId: number): void {
+    if (confirm('Delete this clinic?')) {
+      this.service.deleteClinic(clinicId).subscribe(() => {
+        this.clinics = this.clinics.filter(c => c.clinicId !== clinicId);
+      });
+    }
+  }
+
+  cancelAppointment(appointment: any): void {
+    if (confirm('Cancel this appointment?')) {
+      appointment.status = 'Cancelled';
+      this.service.updateAppointment(appointment).subscribe();
+    }
+  }
+
+  // ================= PATIENT =================
+
+  loadPatientData(): void {
+
+    // Patient details
+    this.service.getPatientById(this.patientId).subscribe({
+      next: (patient) => this.patientDetails = patient,
+      error: () => this.patientDetails = undefined
+    });
+
+    // Appointments
+    this.service.getAppointmentsByPatient(this.patientId).subscribe({
+      next: (appointments) => this.appointments = appointments
+    });
+
+    // Clinics
+    this.service.getAllClinics().subscribe({
+      next: (clinics) => this.clinics = clinics
+    });
+  }
+
+  deletePatient(): void {
+    if (confirm('Delete your profile?')) {
+      this.service.deletePatient(this.patientId).subscribe(() => {
+        this.patientDetails = null;
+      });
+    }
+  }
 }

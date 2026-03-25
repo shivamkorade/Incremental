@@ -1,0 +1,37 @@
+.auth-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.button-group {
+  margin-bottom: 25px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .primary-btn {
+    background: #255d8b;
+    color: white;
+  }
+
+  .secondary-btn {
+    background: #e2e8f0;
+    color: #255d8b;
+    margin-left: 12px;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+}

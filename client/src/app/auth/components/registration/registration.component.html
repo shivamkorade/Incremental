@@ -54,9 +54,12 @@
       <label for="email">Email</label>
       <input id="email" type="email" formControlName="email" placeholder="Email address" />
       <div class="error" *ngIf="email?.touched && email?.invalid">
-        <span *ngIf="email?.errors?.['required']">Email is required.</span>
-        <span *ngIf="email?.errors?.['email']">Enter a valid email address.</span>
-      </div>
+  <span *ngIf="email?.errors?.['required']">Email is required.</span>
+  <span *ngIf="email?.errors?.['email']">Enter a valid email address.</span>
+
+  <!-- ✅ Show backend message under the email input -->
+  <span *ngIf="email?.errors?.['duplicate']">{{ errorMessage }}</span>
+</div>
     </div>
   </div>
 

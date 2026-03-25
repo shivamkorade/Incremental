@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
     errorMessage: string | null = null;
     successMessage: string | null = null;
 
-    constructor(private formBuilder: FormBuilder,private authService: AuthService ) { }
+    constructor(private formBuilder: FormBuilder,private authService: AuthService,private router:Router ) { }
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
@@ -30,37 +31,50 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // clear messages each submit
-        this.successMessage = null;
-        this.errorMessage = null;
+    this.successMessage = null;
+    this.errorMessage = null;
 
-        if (this.loginForm.invalid) {
-            this.loginForm.markAllAsTouched();
-            this.errorMessage = 'Please fill out all fields correctly.';
-            return;
+    if (this.loginForm.invalid) {
+        this.loginForm.markAllAsTouched();
+        this.errorMessage = 'Please fill out all fields correctly.';
+        return;
+    }
+
+    this.authService.login(this.loginForm.value).subscribe({
+
+        next: (res: any) => {
+            console.log('Login Response:', res);
+
+            // ✅ STORE DATA
+            this.authService.storeLoginData(res);
+
+            // ✅ SUCCESS MESSAGE
+            this.successMessage = 'Login successful!';
+            this.errorMessage = null;
+
+            // ✅ REDIRECT (IMPORTANT)
+            setTimeout(() => {
+                this.router.navigate(['mediconnect/dashboard']);
+            }, 500);
+        },
+
+        error: (err) => {
+            console.error('Login Error:', err);
+
+            this.successMessage = null;
+
+            // ✅ Proper backend error handling
+            if (err.status === 401) {
+                this.errorMessage = 'Invalid username or password';
+            } else {
+                this.errorMessage =
+                    err?.error?.message ||
+                    'Something went wrong. Please try again.';
+            }
         }
 
-        // In real app: call auth service and propagate backend errors to UI
-        // this.authService.login(this.loginForm.value).subscribe({
-        //   next: () => {
-        //     this.successMessage = 'Login successful!';
-        //     this.errorMessage = null;
-        //   },
-        //   error: (err) => {
-        //     this.successMessage = null;
-        //     // Properly propagate backend error messages to UI
-        //     this.errorMessage = err?.error?.message || err?.message || 'Login failed. Please try again.';
-        //   }
-        // });
-
-        // For tests / no-backend scenario:
-        // this.successMessage = 'Login successful!';
-        // this.errorMessage = null;
-        this.authService.login(this.loginForm.value).subscribe(() => {
-    this.successMessage = 'Login successful!';
-    this.errorMessage = null;
-});
-    }
+    });
+}
 
     // Convenience getters for template
     get username() { return this.loginForm.get('username'); }

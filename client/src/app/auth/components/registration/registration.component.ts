@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 type Role = 'DOCTOR' | 'PATIENT';
 
@@ -14,7 +15,10 @@ export class RegistrationComponent implements OnInit {
   errorMessage: string | null = null;
   selectedRole: Role | null = null;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
@@ -28,34 +32,34 @@ export class RegistrationComponent implements OnInit {
         ]
       ],
       role: ['', Validators.required],
-      fullName: ['', [Validators.required]],
+      fullName: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
 
-      // Doctor-specific
+      // optional
       specialty: [''],
       yearsOfExperience: [''],
-
-      // Patient-specific
-      dateOfBirth: [''],
+      dateOfBirth: ['', [Validators.required, this.noFutureDateValidator]],
       address: ['']
     });
 
-    // Wire-up dynamic validators on role change
     this.registrationForm.get('role')?.valueChanges.subscribe((role: Role) => {
       this.onRoleChangeInternal(role);
     });
   }
 
+  noFutureDateValidator(control: AbstractControl) {
+  const selected = new Date(control.value);
+  const today = new Date();
+  if (selected > today) {
+    return { futureDate: true };
+  }
+  return null;
+}
+
   private setRequired(ctrl: AbstractControl | null, required: boolean): void {
     if (!ctrl) return;
-    const validators = ctrl.validator ? [ctrl.validator] : [];
-    // Remove any existing required
-    const filtered = validators.filter((v: any) => v !== Validators.required);
-    if (required) {
-      filtered.push(Validators.required);
-    }
-    ctrl.setValidators(filtered);
+    ctrl.setValidators(required ? [Validators.required] : []);
     ctrl.updateValueAndValidity({ emitEvent: false });
   }
 
@@ -67,16 +71,11 @@ export class RegistrationComponent implements OnInit {
     const dob = this.registrationForm.get('dateOfBirth');
     const address = this.registrationForm.get('address');
 
-    // Clear values and validators before applying role-specific rules
     specialty?.reset();
     yoe?.reset();
     dob?.reset();
     address?.reset();
 
-    // Reset base validators for role-specific fields
-    yoe?.setValidators([Validators.min(0)]); // baseline for number if set
-
-    // Apply role-specific required validators
     if (role === 'DOCTOR') {
       this.setRequired(specialty, true);
       this.setRequired(yoe, true);
@@ -87,64 +86,83 @@ export class RegistrationComponent implements OnInit {
       this.setRequired(yoe, false);
       this.setRequired(dob, true);
       this.setRequired(address, true);
-    } else {
-      // No role
-      this.setRequired(specialty, false);
-      this.setRequired(yoe, false);
-      this.setRequired(dob, false);
-      this.setRequired(address, false);
     }
-
-    specialty?.updateValueAndValidity({ emitEvent: false });
-    yoe?.updateValueAndValidity({ emitEvent: false });
-    dob?.updateValueAndValidity({ emitEvent: false });
-    address?.updateValueAndValidity({ emitEvent: false });
   }
 
   onRoleChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const role = (select.value || '') as Role;
+    const role = (event.target as HTMLSelectElement).value as Role;
     this.onRoleChangeInternal(role);
   }
 
   onSubmit(): void {
-    this.successMessage = null;
-    this.errorMessage = null;
+  this.successMessage = null;
+  this.errorMessage = null;
 
-    if (this.registrationForm.invalid) {
-      this.registrationForm.markAllAsTouched();
-      // this.errorMessage = 'Please fill out all required fields correctly.';
-      this.errorMessage = 'Please fill out all fields correctly.';
-      return;
-    }
-
-    const payload = this.registrationForm.value;
-
-    // In a real app: call auth/register API and propagate backend errors
-    // this.authService.register(payload).subscribe({
-    //   next: () => {
-    //     this.successMessage = 'Registration successful!';
-    //     this.errorMessage = null;
-    //     this.resetForm();
-    //   },
-    //   error: (err) => {
-    //     this.successMessage = null;
-    //     this.errorMessage = err?.error?.message || err?.message || 'Registration failed. Please try again.';
-    //   }
-    // });
-
-    // For tests / no-backend scenario:
-    this.successMessage = 'Registration successful!';
-    this.errorMessage = null;
-    this.resetForm();
+  if (this.registrationForm.invalid) {
+    this.registrationForm.markAllAsTouched();
+    this.errorMessage = 'Please fill all fields correctly';
+    return;
   }
+
+  const formValue = this.registrationForm.value;
+
+  let payload: any = {
+    username: formValue.username,
+    password: formValue.password,
+    role: formValue.role,
+    fullName: formValue.fullName,
+    contactNumber: formValue.contactNumber,
+    email: formValue.email
+  };
+
+  // ✅ ADD ROLE-BASED FIELDS (CRITICAL FIX)
+  if (formValue.role === 'DOCTOR') {
+    payload.specialty = formValue.specialty || '';
+    payload.yearsOfExperience = formValue.yearsOfExperience
+      ? Number(formValue.yearsOfExperience)
+      : 0;   // 🔥 prevents null crash
+  }
+
+  if (formValue.role === 'PATIENT') {
+    payload.dateOfBirth = formValue.dateOfBirth || null;
+    payload.address = formValue.address || '';
+  }
+
+  console.log('Sending payload:', payload); // ✅ DEBUG
+
+  this.authService.createUser(payload).subscribe({
+    next: (res) => {
+      console.log('User created:', res);
+      this.successMessage = 'Registration successful!';
+      this.resetForm();
+    },
+    error: (err) => {
+  console.error('Registration error:', err);
+
+  // Extract backend message safely
+  const backendMsg =
+    err?.error?.message ||    // Spring Boot @ExceptionHandler returns here
+    err?.error?.error ||      // Some APIs return { error: "message" }
+    err?.error?.details ||    // Validation frameworks use this
+    err?.message;             // Fallback
+
+  this.errorMessage = backendMsg || 'Registration failed. Please try again.';
+
+  // OPTIONAL: Mark email field as duplicate
+  if (backendMsg && backendMsg.toLowerCase().includes('email')) {
+    this.email?.setErrors({ duplicate: true });
+  }
+}
+
+  });
+}
 
   resetForm(): void {
     this.registrationForm.reset();
     this.selectedRole = null;
   }
 
-  // Convenience getters
+  // ✅ ALL REQUIRED GETTERS (fixes your error)
   get username() { return this.registrationForm.get('username'); }
   get password() { return this.registrationForm.get('password'); }
   get role() { return this.registrationForm.get('role'); }
