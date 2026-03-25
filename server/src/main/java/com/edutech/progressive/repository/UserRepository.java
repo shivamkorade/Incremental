@@ -1,5 +1,3 @@
-
-
 package com.edutech.progressive.repository;
 
 import com.edutech.progressive.entity.User;
@@ -10,15 +8,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
     User findByUsername(String username);
 
+    // ✅ FIXED: returns List to avoid NonUniqueResultException
     @Query("SELECT u FROM User u WHERE u.doctor.doctorId = :doctorId")
-    User findByDoctorId(@Param("doctorId") int doctorId);
+    List<User> findByDoctorId(@Param("doctorId") int doctorId);
 
+    // ✅ FIXED: returns List to avoid NonUniqueResultException
     @Query("SELECT u FROM User u WHERE u.patient.patientId = :patientId")
-    User findByPatientId(@Param("patientId") int patientId);
+    List<User> findByPatientId(@Param("patientId") int patientId);
 
     @Modifying
     @Transactional

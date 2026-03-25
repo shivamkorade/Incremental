@@ -1,6 +1,3 @@
-
-
-
 package com.edutech.progressive.service.impl;
 
 import com.edutech.progressive.dto.DoctorDTO;
@@ -64,36 +61,52 @@ public class DoctorServiceImplJpa implements DoctorService {
 
     @Override
     public void modifyDoctorDetails(DoctorDTO doctorDTO) throws Exception {
-        Doctor existingDoctor = doctorRepository.findByEmail(doctorDTO.getEmail());
-        User doctorUser = userRepository.findByDoctorId(doctorDTO.getDoctorId());
-        if (existingDoctor != null && existingDoctor.getDoctorId() != doctorDTO.getDoctorId()) {
+
+        // ✅ Check duplicate email
+        Doctor existingByEmail = doctorRepository.findByEmail(doctorDTO.getEmail());
+        if (existingByEmail != null && existingByEmail.getDoctorId() != doctorDTO.getDoctorId()) {
             throw new DoctorAlreadyExistsException("Doctor with email " + doctorDTO.getEmail() + " already exists");
-            // throw new DoctorAlreadyExistsException
         }
-        User user = userRepository.findByUsername(doctorDTO.getUsername());
-        if (user != null && user.getDoctor().getDoctorId() != doctorDTO.getDoctorId()) {
-            throw new DoctorAlreadyExistsException("User with username " + doctorDTO.getEmail() + " already exists");
-        }
-        else {
-            doctorUser.setUsername(doctorDTO.getUsername());
-        }
-        if (!doctorUser.getPassword().equals(doctorDTO.getPassword())) {
-            doctorUser.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
-        }
-        userRepository.save(doctorUser);
-        Doctor doctorEntity = new Doctor();
-        doctorEntity.setDoctorId(doctorDTO.getDoctorId());
+
+        // ✅ Update doctor entity using findById (primary key - always unique)
+        Doctor doctorEntity = doctorRepository.findById(doctorDTO.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + doctorDTO.getDoctorId()));
+
         doctorEntity.setFullName(doctorDTO.getFullName());
         doctorEntity.setEmail(doctorDTO.getEmail());
         doctorEntity.setContactNumber(doctorDTO.getContactNumber());
         doctorEntity.setSpecialty(doctorDTO.getSpecialty());
         doctorEntity.setYearsOfExperience(doctorDTO.getYearsOfExperience());
         doctorRepository.save(doctorEntity);
+
+        // ✅ FIXED: findByDoctorId now returns List — get first result
+        List<User> users = userRepository.findByDoctorId(doctorDTO.getDoctorId());
+        if (users != null && !users.isEmpty()) {
+            User linkedUser = users.get(0);
+
+            // Update username if provided and not taken by another user
+            if (doctorDTO.getUsername() != null && !doctorDTO.getUsername().isEmpty()) {
+                User existingUsername = userRepository.findByUsername(doctorDTO.getUsername());
+                if (existingUsername != null
+                        && existingUsername.getUserId() != linkedUser.getUserId()) {
+                    throw new DoctorAlreadyExistsException("Username " + doctorDTO.getUsername() + " already taken");
+                }
+                linkedUser.setUsername(doctorDTO.getUsername());
+            }
+
+            // Update password if provided and different
+            if (doctorDTO.getPassword() != null && !doctorDTO.getPassword().isEmpty()) {
+                if (!passwordEncoder.matches(doctorDTO.getPassword(), linkedUser.getPassword())) {
+                    linkedUser.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
+                }
+            }
+
+            userRepository.save(linkedUser);
+        }
     }
 
     @Override
     public void deleteDoctor(int doctorId) throws Exception {
-        // appointmentRepository.deleteByDoctorId(doctorId);
         clinicRepository.deleteByDoctorId(doctorId);
         userRepository.deleteByDoctorId(doctorId);
         doctorRepository.deleteById(doctorId);
@@ -101,7 +114,9 @@ public class DoctorServiceImplJpa implements DoctorService {
 
     @Override
     public Doctor getDoctorById(int doctorId) throws Exception {
-        return doctorRepository.findByDoctorId(doctorId);
+        // ✅ FIXED: use findById instead of findByDoctorId
+        return doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + doctorId));
     }
 
     @Override

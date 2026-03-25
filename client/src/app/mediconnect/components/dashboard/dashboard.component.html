@@ -1,58 +1,156 @@
 <div class="dashboard">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-left">MediConnect</div>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </nav>
 
-  <h2 class="title">Doctor Dashboard</h2>
+  <!-- ===================== DOCTOR VIEW ===================== -->
+  <div *ngIf="role === 'DOCTOR'">
+    <h2 class="main-title">Doctor Dashboard</h2>
 
-  <!-- Doctor Details -->
-  <div *ngIf="doctorDetails" class="card">
-    <h3>Doctor Details</h3>
-
-    <p><b>Name:</b> {{ doctorDetails.full_name }}</p>
-<p><b>Email:</b> {{ doctorDetails.email }}</p>
-<p><b>Specialty:</b> {{ doctorDetails.specialty }}</p>
-<p><b>Years of Experience:</b> {{ doctorDetails.years_of_experience }}</p>
-
-    <div class="btn-row">
-      <button class="edit-btn" routerLink="/doctor-edit">Edit</button>
-      <button class="delete-btn" (click)="deleteDoctor()">Delete</button>
-    </div>
-  </div>
-
-  <!-- If no doctor -->
-  <div *ngIf="!doctorDetails" class="card empty">
-    No doctor details available.
-  </div>
-
-  <!-- Clinics -->
-  <div class="card">
-    <h3>Clinics</h3>
-
-    <div *ngIf="clinics.length === 0" class="empty-box">No clinics.</div>
-
-    <ul *ngIf="clinics.length > 0">
-      <li *ngFor="let clinic of clinics">
-        <b>{{ clinic.clinicName }}</b> - {{ clinic.location }}
-        <div class="btn-row">
-          <button class="edit-btn" [routerLink]="['/clinic-edit', clinic.clinicId]">Edit</button>
-          <button class="delete-btn" (click)="deleteClinic(clinic.clinicId)">Delete</button>
+    <!-- Doctor Details Card -->
+    <div class="card">
+      <h3>Doctor Details</h3>
+      <div *ngIf="doctorDetails; else noDoctor">
+        <p><strong>Name:</strong> {{ doctorDetails.fullName }}</p>
+        <p><strong>Email:</strong> {{ doctorDetails.email }}</p>
+        <p><strong>Specialty:</strong> {{ doctorDetails.specialty }}</p>
+        <p><strong>Years of Experience:</strong> {{ doctorDetails.yearsOfExperience || doctorDetails.experience }}</p>
+        <div class="btn-group">
+          <button class="edit-btn" (click)="navigateToEditDoctor()">Edit</button>
+          <button class="delete-btn" (click)="deleteDoctor()">Delete</button>
         </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Appointments -->
-  <div class="card">
-    <h3>Appointments</h3>
-
-    <div *ngIf="appointments.length === 0" class="empty-box">
-      No appointments available.
+      </div>
+      <ng-template #noDoctor>
+        <div class="empty-alert">No doctor details available.</div>
+      </ng-template>
     </div>
 
-    <ul *ngIf="appointments.length > 0">
-      <li *ngFor="let appt of appointments">
-        {{ appt.appointmentDate | date }} - {{ appt.status }} - {{ appt.purpose }}
-        <button class="delete-btn" (click)="cancelAppointment(appt)">Cancel</button>
-      </li>
-    </ul>
+    <!-- Clinics Section -->
+    <div class="card">
+      <h3>Clinics</h3>
+      <div *ngIf="clinics.length > 0; else noClinic">
+        <ul>
+          <li *ngFor="let clinic of clinics" (click)="onClinicSelect(clinic)" style="cursor:pointer;">
+            <span>{{ clinic.clinicName }}</span>
+            <div class="btn-group-inline">
+              <button class="small-edit-btn" (click)="$event.stopPropagation(); navigateToEditClinic(clinic.clinicId)">Edit</button>
+              <button class="small-delete-btn" (click)="$event.stopPropagation(); deleteClinic(clinic.clinicId)">Delete</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noClinic>
+        <div class="empty-alert">No clinics.</div>
+      </ng-template>
+    </div>
+
+    <!-- Appointments Section -->
+    <div class="card">
+      <h3>Appointments
+        <span *ngIf="selectedClinicId"> — Clinic #{{ selectedClinicId }}</span>
+      </h3>
+      <p *ngIf="!selectedClinicId" class="hint-text">Click a clinic above to view its appointments.</p>
+      <div *ngIf="selectedClinicAppointments.length > 0; else noAppt">
+        <ul>
+          <li *ngFor="let appt of selectedClinicAppointments">
+            <span>{{ appt.appointmentDate | date:'mediumDate' }} — Status: {{ appt.status }}</span>
+            <button class="small-delete-btn" (click)="cancelAppointment(appt)">Cancel</button>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noAppt>
+        <div class="empty-alert" *ngIf="selectedClinicId">No appointments available.</div>
+      </ng-template>
+    </div>
+
+    <!-- Patients Section -->
+    <div class="card">
+      <h3>Patients</h3>
+      <div *ngIf="doctors.length > 0; else noPatients">
+        <ul>
+          <li *ngFor="let patient of doctors">
+            <span>{{ patient.fullName }}</span> — {{ patient.email }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noPatients>
+        <div class="empty-alert">No patients available.</div>
+      </ng-template>
+    </div>
   </div>
 
+  <!-- ===================== PATIENT VIEW ===================== -->
+  <div *ngIf="role === 'PATIENT'">
+    <h2 class="main-title">Patient Dashboard</h2>
+
+    <!-- Patient Details Card -->
+    <div class="card">
+      <h3>Patient Details</h3>
+      <div *ngIf="patientDetails; else noPatient">
+        <p><strong>Name:</strong> {{ patientDetails.fullName }}</p>
+        <p><strong>Email:</strong> {{ patientDetails.email }}</p>
+        <p><strong>Contact:</strong> {{ patientDetails.contactNumber }}</p>
+        <p><strong>Address:</strong> {{ patientDetails.address }}</p>
+        <div class="btn-group">
+          <button class="edit-btn" (click)="navigateToEditPatient()">Edit</button>
+          <button class="delete-btn" (click)="deletePatient()">Delete</button>
+        </div>
+      </div>
+      <ng-template #noPatient>
+        <div class="empty-alert">No patient details available.</div>
+      </ng-template>
+    </div>
+
+    <!-- Patient Appointments -->
+    <div class="card">
+      <h3>Your Appointments</h3>
+      <div *ngIf="appointments.length > 0; else noPatientAppt">
+        <ul>
+          <li *ngFor="let appt of appointments">
+            <span>{{ appt.appointmentDate | date:'mediumDate' }}</span>
+            — Status: {{ appt.status }}
+            — Purpose: {{ appt.purpose }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noPatientAppt>
+        <div class="empty-alert">No appointments available.</div>
+      </ng-template>
+    </div>
+
+    <!-- Clinics -->
+    <div class="card">
+      <h3>Available Clinics</h3>
+      <div *ngIf="clinics.length > 0; else noClinic2">
+        <ul>
+          <li *ngFor="let clinic of clinics">
+            <span>{{ clinic.clinicName }}</span> — {{ clinic.location }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noClinic2>
+        <div class="empty-alert">No clinics available.</div>
+      </ng-template>
+    </div>
+
+    <!-- Doctors -->
+    <div class="card">
+      <h3>Available Doctors</h3>
+      <div *ngIf="doctors.length > 0; else noDoctors">
+        <ul>
+          <li *ngFor="let doctor of doctors">
+            <span>{{ doctor.fullName }}</span>
+            — {{ doctor.specialty }}
+            — Exp: {{ doctor.yearsOfExperience }} yrs
+            — {{ doctor.contactNumber }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noDoctors>
+        <div class="empty-alert">No doctors available.</div>
+      </ng-template>
+    </div>
+  </div>
 </div>

@@ -1,4 +1,3 @@
-
 package com.edutech.progressive.service.impl;
 
 import com.edutech.progressive.dto.PatientDTO;
@@ -63,31 +62,49 @@ public class PatientServiceImplJpa implements PatientService {
     }
 
     @Override
-    public void modifyPatientDetails(PatientDTO patientDTO) throws Exception{
+    public void modifyPatientDetails(PatientDTO patientDTO) throws Exception {
+
+        // ✅ Check duplicate email
         Patient existingPatient = patientRepository.findByEmail(patientDTO.getEmail());
-        User patientUser = userRepository.findByPatientId(patientDTO.getPatientId());
         if (existingPatient != null && existingPatient.getPatientId() != patientDTO.getPatientId()) {
             throw new PatientAlreadyExistsException("Patient with email " + patientDTO.getEmail() + " already exists");
         }
-        User user = userRepository.findByUsername(patientDTO.getUsername());
-        if (user != null && user.getPatient().getPatientId() != patientDTO.getPatientId()) {
-            throw new DoctorAlreadyExistsException("User with username " + patientDTO.getEmail() + " already exists");
-        }
-        else {
-            patientUser.setUsername(patientDTO.getUsername());
-        }
-        if (!patientUser.getPassword().equals(patientDTO.getPassword())) {
-            patientUser.setPassword(passwordEncoder.encode(patientDTO.getPassword()));
-        }
-        userRepository.save(patientUser);
-        Patient patientEntity = new Patient();
-        patientEntity.setPatientId(patientDTO.getPatientId());
+
+        // ✅ Update patient entity using findById (primary key - always unique)
+        Patient patientEntity = patientRepository.findById(patientDTO.getPatientId())
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with id: " + patientDTO.getPatientId()));
+
         patientEntity.setFullName(patientDTO.getFullName());
         patientEntity.setDateOfBirth(patientDTO.getDateOfBirth());
         patientEntity.setEmail(patientDTO.getEmail());
         patientEntity.setContactNumber(patientDTO.getContactNumber());
         patientEntity.setAddress(patientDTO.getAddress());
         patientRepository.save(patientEntity);
+
+        // ✅ FIXED: findByPatientId now returns List<User>
+        List<User> users = userRepository.findByPatientId(patientDTO.getPatientId());
+        if (users != null && !users.isEmpty()) {
+            User linkedUser = users.get(0);
+
+            // ✅ Update username if provided and not taken by another user
+            if (patientDTO.getUsername() != null && !patientDTO.getUsername().isEmpty()) {
+                User existingUsername = userRepository.findByUsername(patientDTO.getUsername());
+                if (existingUsername != null
+                        && existingUsername.getUserId() != linkedUser.getUserId()) {
+                    throw new DoctorAlreadyExistsException("Username " + patientDTO.getUsername() + " already taken");
+                }
+                linkedUser.setUsername(patientDTO.getUsername());
+            }
+
+            // ✅ Update password only if changed
+            if (patientDTO.getPassword() != null && !patientDTO.getPassword().isEmpty()) {
+                if (!passwordEncoder.matches(patientDTO.getPassword(), linkedUser.getPassword())) {
+                    linkedUser.setPassword(passwordEncoder.encode(patientDTO.getPassword()));
+                }
+            }
+
+            userRepository.save(linkedUser);
+        }
     }
 
     @Override

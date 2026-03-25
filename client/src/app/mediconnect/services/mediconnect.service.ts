@@ -11,9 +11,8 @@ export class MediConnectService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Add token headers here
   private getAuthHeaders() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     return {
       headers: {
         Authorization: `Bearer ${token}`
@@ -21,98 +20,116 @@ export class MediConnectService {
     };
   }
 
-  // ---------------- PATIENT & DOCTOR CREATION ----------------
-
+  // ---------------- PATIENT ----------------
   savePatient(patient: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/patients`, patient, this.getAuthHeaders());
+    return this.http.post(`${this.apiUrl}/patient`, patient, this.getAuthHeaders());
   }
 
+  getPatientById(patientId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/patient/${patientId}`, this.getAuthHeaders());
+  }
+
+  getAllPatients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/patient`, this.getAuthHeaders());
+  }
+
+  updatePatient(patientId: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/patient/${patientId}`, data, this.getAuthHeaders());
+  }
+
+  deletePatient(patientId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/patient/${patientId}`, this.getAuthHeaders());
+  }
+
+  // ---------------- DOCTOR ----------------
   saveDoctor(doctor: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/doctor`, doctor, this.getAuthHeaders());
   }
 
-  // ---------------- PATIENT ----------------
-
-  getPatientById(patientId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/patients/${patientId}`, this.getAuthHeaders());
-  }
-
-  updatePatient(patientId: number, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/patients/${patientId}`, data, this.getAuthHeaders());
-  }
-
-  deletePatient(patientId: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/patients/${patientId}`, this.getAuthHeaders());
-  }
-
-  // ---------------- DOCTOR ----------------
-
-  // ✅ FIXED PATH (/doctor NOT /doctors)
   getDoctorById(doctorId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/doctor/${doctorId}`, this.getAuthHeaders());
   }
 
-  // ✅ FIXED path
-  updateDoctor(doctorId: number, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/doctor/${doctorId}`, data, this.getAuthHeaders());
+  getAllDoctors(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/doctor`, this.getAuthHeaders());
   }
 
-  // ✅ FIXED path
+  // ✅ FIXED: added auth headers
+  updateDoctor(doctorId: number, doctor: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/doctor/${doctorId}`, doctor, this.getAuthHeaders());
+  }
+
   deleteDoctor(doctorId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/doctor/${doctorId}`, this.getAuthHeaders());
   }
 
   getUserById(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/users/${userId}`, this.getAuthHeaders());
+    return this.http.get<any>(`${this.apiUrl}/user/${userId}`, this.getAuthHeaders());
   }
 
   // ---------------- CLINIC ----------------
-
   getAllClinics(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/clinics`, this.getAuthHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/clinic`, this.getAuthHeaders());
   }
 
   addClinic(clinic: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/clinics`, clinic, this.getAuthHeaders());
+    return this.http.post(`${this.apiUrl}/clinic`, clinic, this.getAuthHeaders());
   }
 
   updateClinic(clinicId: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/clinics/${clinicId}`, data, this.getAuthHeaders());
+    return this.http.put(`${this.apiUrl}/clinic/${clinicId}`, data, this.getAuthHeaders());
   }
 
   deleteClinic(clinicId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/clinics/${clinicId}`, this.getAuthHeaders());
+    return this.http.delete(`${this.apiUrl}/clinic/${clinicId}`, this.getAuthHeaders());
   }
 
-  // ✅ FIXED path: /doctor/{id}/clinics
   getClinicsByDoctorId(doctorId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/doctor/${doctorId}/clinics`, this.getAuthHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/clinic/doctor/${doctorId}`, this.getAuthHeaders());
+  }
+
+  getClinicsByLocation(location: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/clinic/location/${location}`, this.getAuthHeaders());
   }
 
   // ---------------- APPOINTMENT ----------------
+  getAllAppointments(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/appointment`, this.getAuthHeaders());
+  }
+
+  getAppointmentById(appointmentId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/appointment/${appointmentId}`, this.getAuthHeaders());
+  }
 
   getAppointmentsByPatient(patientId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/appointments/patient/${patientId}`, this.getAuthHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/appointment/patient/${patientId}`, this.getAuthHeaders());
   }
 
   getAppointmentsByClinic(clinicId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/clinics/${clinicId}/appointments`, this.getAuthHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/appointment/clinic/${clinicId}`, this.getAuthHeaders());
   }
 
-  // ✅ FIXED path
+  getAppointmentsByStatus(status: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/appointment/status/${status}`, this.getAuthHeaders());
+  }
+
   getAppointmentsByDoctorId(doctorId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/appointments/doctor/${doctorId}`, this.getAuthHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/appointment`, this.getAuthHeaders());
   }
 
   createAppointment(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/appointments`, data, this.getAuthHeaders());
+    return this.http.post<any>(`${this.apiUrl}/appointment`, data, this.getAuthHeaders());
   }
 
   updateAppointment(data: any): Observable<any> {
     return this.http.put<any>(
-      `${this.apiUrl}/appointments/${data.appointmentId}`,
+      `${this.apiUrl}/appointment/${data.appointmentId}`,
       data,
       this.getAuthHeaders()
     );
+  }
+
+  deleteAppointment(appointmentId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/appointment/${appointmentId}`, this.getAuthHeaders());
   }
 }
