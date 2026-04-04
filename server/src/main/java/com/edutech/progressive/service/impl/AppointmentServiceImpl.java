@@ -10,12 +10,11 @@ import com.edutech.progressive.repository.AppointmentRepository;
 import com.edutech.progressive.service.AppointmentService;
 
 @Service
-public class AppointmentServiceImpl implements AppointmentService{
-
+public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
-    
+
     @Override
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -44,16 +43,12 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public List<Appointment> getAppointmentByClinic(int clinicId) {
-        // return ar.findByClinicId(clinicId);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAppointmentByClinic'");
+        return appointmentRepository.findByClinic_ClinicId(clinicId);
     }
 
     @Override
     public List<Appointment> getAppointmentByPatient(int patientId) {
-        // return ar.findByPatientId(patientId);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAppointmentByPatient'");
+        return appointmentRepository.findByPatient_PatientId(patientId);
     }
 
     @Override
@@ -61,7 +56,8 @@ public class AppointmentServiceImpl implements AppointmentService{
         return appointmentRepository.findByStatus(status);
     }
 
+    @Override
+public List<com.edutech.progressive.entity.Patient> getPatientsByDoctorId(int doctorId) {
+    return appointmentRepository.findPatientsByDoctorId(doctorId);
 }
-
-
-
+}

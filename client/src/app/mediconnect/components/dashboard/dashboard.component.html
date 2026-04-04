@@ -1,4 +1,5 @@
 <div class="dashboard">
+
   <!-- Navbar -->
   <nav class="navbar">
     <div class="nav-left">MediConnect</div>
@@ -9,7 +10,7 @@
   <div *ngIf="role === 'DOCTOR'">
     <h2 class="main-title">Doctor Dashboard</h2>
 
-    <!-- Doctor Details Card -->
+    <!-- Doctor Details -->
     <div class="card">
       <h3>Doctor Details</h3>
       <div *ngIf="doctorDetails; else noDoctor">
@@ -18,8 +19,8 @@
         <p><strong>Specialty:</strong> {{ doctorDetails.specialty }}</p>
         <p><strong>Years of Experience:</strong> {{ doctorDetails.yearsOfExperience || doctorDetails.experience }}</p>
         <div class="btn-group">
-          <button class="edit-btn" (click)="navigateToEditDoctor()">Edit</button>
-          <button class="delete-btn" (click)="deleteDoctor()">Delete</button>
+          <button class="edit-btn" (click)="navigateToEditDoctor()">Edit Profile</button>
+          <button class="delete-btn" (click)="deleteDoctor()">Delete Profile</button>
         </div>
       </div>
       <ng-template #noDoctor>
@@ -27,54 +28,69 @@
       </ng-template>
     </div>
 
-    <!-- Clinics Section -->
+    <!-- Clinics -->
     <div class="card">
-      <h3>Clinics</h3>
-      <div *ngIf="clinics.length > 0; else noClinic">
-        <ul>
-          <li *ngFor="let clinic of clinics" (click)="onClinicSelect(clinic)" style="cursor:pointer;">
-            <span>{{ clinic.clinicName }}</span>
-            <div class="btn-group-inline">
-              <button class="small-edit-btn" (click)="$event.stopPropagation(); navigateToEditClinic(clinic.clinicId)">Edit</button>
-              <button class="small-delete-btn" (click)="$event.stopPropagation(); deleteClinic(clinic.clinicId)">Delete</button>
-            </div>
-          </li>
-        </ul>
+      <div class="card-header-row">
+        <h3>My Clinics</h3>
+        <button class="add-btn" routerLink="/mediconnect/clinic/create">+ Add Clinic</button>
       </div>
-      <ng-template #noClinic>
-        <div class="empty-alert">No clinics.</div>
-      </ng-template>
+
+      <ul *ngIf="clinics.length > 0">
+        <li *ngFor="let clinic of clinics"
+            (click)="onClinicSelect(clinic)"
+            [class.selected-clinic]="selectedClinicId === clinic.clinicId">
+          <span>{{ clinic.clinicName }} — {{ clinic.location }}</span>
+          <div class="btn-group-inline">
+            <button class="small-edit-btn"
+                    (click)="$event.stopPropagation(); navigateToEditClinic(clinic.clinicId)">
+              Edit
+            </button>
+            <button class="small-delete-btn"
+                    (click)="$event.stopPropagation(); deleteClinic(clinic.clinicId)">
+              Delete
+            </button>
+          </div>
+        </li>
+      </ul>
+
+      <div class="hint-text" *ngIf="!selectedClinicId">
+        👆 Click a clinic to view appointments & patients
+      </div>
     </div>
 
-    <!-- Appointments Section -->
-    <div class="card">
-      <h3>Appointments
-        <span *ngIf="selectedClinicId"> — Clinic #{{ selectedClinicId }}</span>
-      </h3>
-      <p *ngIf="!selectedClinicId" class="hint-text">Click a clinic above to view its appointments.</p>
-      <div *ngIf="selectedClinicAppointments.length > 0; else noAppt">
-        <ul>
-          <li *ngFor="let appt of selectedClinicAppointments">
-            <span>{{ appt.appointmentDate | date:'mediumDate' }} — Status: {{ appt.status }}</span>
-            <button class="small-delete-btn" (click)="cancelAppointment(appt)">Cancel</button>
-          </li>
-        </ul>
-      </div>
+    <!-- Appointments -->
+    <div class="card" *ngIf="selectedClinicId">
+      <h3>Appointments for Clinic #{{ selectedClinicId }}</h3>
+
+      <ul *ngIf="selectedClinicAppointments.length > 0; else noAppt">
+        <li *ngFor="let appt of selectedClinicAppointments">
+          <span>{{ appt.appointmentDate | date:'mediumDate' }} — {{ appt.purpose }}</span>
+          <span class="status-badge" [class.status-canceled]="appt.status === 'Canceled'">
+            {{ appt.status }}
+          </span>
+          <button class="small-delete-btn"
+                  (click)="cancelAppointment(appt)"
+                  [disabled]="appt.status === 'Canceled'">
+            Cancel
+          </button>
+        </li>
+      </ul>
+
       <ng-template #noAppt>
-        <div class="empty-alert" *ngIf="selectedClinicId">No appointments available.</div>
+        <div class="empty-alert">No appointments for this clinic.</div>
       </ng-template>
     </div>
 
-    <!-- Patients Section -->
-    <div class="card">
-      <h3>Patients</h3>
-      <div *ngIf="doctors.length > 0; else noPatients">
-        <ul>
-          <li *ngFor="let patient of doctors">
-            <span>{{ patient.fullName }}</span> — {{ patient.email }}
-          </li>
-        </ul>
-      </div>
+    <!-- ✅ Registered Patients (OPTION 1) -->
+    <div class="card" *ngIf="selectedClinicId">
+      <h3>Registered Patients</h3>
+
+      <ul *ngIf="doctors.length > 0; else noPatients">
+        <li *ngFor="let patient of doctors">
+          <span>{{ patient.fullName }}</span> — {{ patient.email }}
+        </li>
+      </ul>
+
       <ng-template #noPatients>
         <div class="empty-alert">No patients available.</div>
       </ng-template>
@@ -85,71 +101,26 @@
   <div *ngIf="role === 'PATIENT'">
     <h2 class="main-title">Patient Dashboard</h2>
 
-    <!-- Patient Details Card -->
     <div class="card">
       <h3>Patient Details</h3>
-      <div *ngIf="patientDetails; else noPatient">
-        <p><strong>Name:</strong> {{ patientDetails.fullName }}</p>
-        <p><strong>Email:</strong> {{ patientDetails.email }}</p>
-        <p><strong>Contact:</strong> {{ patientDetails.contactNumber }}</p>
-        <p><strong>Address:</strong> {{ patientDetails.address }}</p>
-        <div class="btn-group">
-          <button class="edit-btn" (click)="navigateToEditPatient()">Edit</button>
-          <button class="delete-btn" (click)="deletePatient()">Delete</button>
-        </div>
-      </div>
-      <ng-template #noPatient>
-        <div class="empty-alert">No patient details available.</div>
-      </ng-template>
+      <p><strong>Name:</strong> {{ patientDetails?.fullName }}</p>
+      <p><strong>Email:</strong> {{ patientDetails?.email }}</p>
+      <p><strong>Contact:</strong> {{ patientDetails?.contactNumber }}</p>
+      <p><strong>Address:</strong> {{ patientDetails?.address }}</p>
     </div>
 
-    <!-- Patient Appointments -->
     <div class="card">
-      <h3>Your Appointments</h3>
-      <div *ngIf="appointments.length > 0; else noPatientAppt">
-        <ul>
-          <li *ngFor="let appt of appointments">
-            <span>{{ appt.appointmentDate | date:'mediumDate' }}</span>
-            — Status: {{ appt.status }}
-            — Purpose: {{ appt.purpose }}
-          </li>
-        </ul>
-      </div>
+      <h3>My Appointments</h3>
+
+      <ul *ngIf="appointments.length > 0; else noPatientAppt">
+        <li *ngFor="let appt of appointments">
+          {{ appt.appointmentDate | date:'mediumDate' }} — {{ appt.purpose }}
+          <span class="status-badge">{{ appt.status }}</span>
+        </li>
+      </ul>
+
       <ng-template #noPatientAppt>
-        <div class="empty-alert">No appointments available.</div>
-      </ng-template>
-    </div>
-
-    <!-- Clinics -->
-    <div class="card">
-      <h3>Available Clinics</h3>
-      <div *ngIf="clinics.length > 0; else noClinic2">
-        <ul>
-          <li *ngFor="let clinic of clinics">
-            <span>{{ clinic.clinicName }}</span> — {{ clinic.location }}
-          </li>
-        </ul>
-      </div>
-      <ng-template #noClinic2>
-        <div class="empty-alert">No clinics available.</div>
-      </ng-template>
-    </div>
-
-    <!-- Doctors -->
-    <div class="card">
-      <h3>Available Doctors</h3>
-      <div *ngIf="doctors.length > 0; else noDoctors">
-        <ul>
-          <li *ngFor="let doctor of doctors">
-            <span>{{ doctor.fullName }}</span>
-            — {{ doctor.specialty }}
-            — Exp: {{ doctor.yearsOfExperience }} yrs
-            — {{ doctor.contactNumber }}
-          </li>
-        </ul>
-      </div>
-      <ng-template #noDoctors>
-        <div class="empty-alert">No doctors available.</div>
+        <div class="empty-alert">No appointments yet.</div>
       </ng-template>
     </div>
   </div>

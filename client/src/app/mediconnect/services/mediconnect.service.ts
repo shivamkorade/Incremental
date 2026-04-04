@@ -29,6 +29,11 @@ export class MediConnectService {
     return this.http.get<any>(`${this.apiUrl}/patient/${patientId}`, this.getAuthHeaders());
   }
 
+  getPatientsByDoctorId(doctorId: number) {
+  return this.http.get<any[]>(`${this.apiUrl}/appointment/patients/doctor/${doctorId}`
+  );
+}
+
   getAllPatients(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/patient`, this.getAuthHeaders());
   }
@@ -54,7 +59,6 @@ export class MediConnectService {
     return this.http.get<any[]>(`${this.apiUrl}/doctor`, this.getAuthHeaders());
   }
 
-  // ✅ FIXED: added auth headers
   updateDoctor(doctorId: number, doctor: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/doctor/${doctorId}`, doctor, this.getAuthHeaders());
   }
@@ -101,24 +105,33 @@ export class MediConnectService {
     return this.http.get<any>(`${this.apiUrl}/appointment/${appointmentId}`, this.getAuthHeaders());
   }
 
+  // ✅ FIXED: matches backend -> /appointment/patient/{patientId}
   getAppointmentsByPatient(patientId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/appointment/patient/${patientId}`, this.getAuthHeaders());
   }
 
+  // ✅ FIXED: matches backend -> /appointment/clinic/{clinicId}
   getAppointmentsByClinic(clinicId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/appointment/clinic/${clinicId}`, this.getAuthHeaders());
   }
 
+  // ✅ FIXED: backend is /appointment/status/{status} (NOT /appointment/{status})
   getAppointmentsByStatus(status: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/appointment/status/${status}`, this.getAuthHeaders());
   }
 
+  // (Not used; keeping as-is)
   getAppointmentsByDoctorId(doctorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/appointment`, this.getAuthHeaders());
   }
 
-  createAppointment(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/appointment`, data, this.getAuthHeaders());
+  // ✅ FIXED: expects backend response { message, appointmentId }
+  createAppointment(data: any): Observable<{ message: string; appointmentId: number }> {
+    return this.http.post<{ message: string; appointmentId: number }>(
+      `${this.apiUrl}/appointment`,
+      data,
+      this.getAuthHeaders()
+    );
   }
 
   updateAppointment(data: any): Observable<any> {

@@ -10,16 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edutech.progressive.entity.Appointment;
 import java.util.List;
 
-
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Integer>{
+public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
-    // public List<Appointment> findByClinicId(Integer clinicId);
-    // public List<Appointment> findByPatientId(Integer patientId);
-    public List<Appointment> findByStatus(String status);
-    // void deleteByDoctorId(int doctorId);
+    List<Appointment> findByStatus(String status);
+
+    // ✅ because Appointment has `Clinic clinic` and Clinic has `clinicId`
+    List<Appointment> findByClinic_ClinicId(int clinicId);
+
+    // ✅ because Appointment has `Patient patient` and Patient has `patientId`
+    List<Appointment> findByPatient_PatientId(int patientId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Appointment a WHERE a.patient.patientId = :patientId")
     void deleteByPatientId(@Param("patientId") int patientId);
+
+    @Query(" SELECT DISTINCT a.patient FROM Appointment a WHERE a.clinic.doctorId = :doctorId ")
+    List<com.edutech.progressive.entity.Patient> findPatientsByDoctorId(
+            @Param("doctorId") int doctorId);
 }

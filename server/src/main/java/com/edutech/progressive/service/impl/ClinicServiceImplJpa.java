@@ -33,15 +33,21 @@ public class ClinicServiceImplJpa implements ClinicService {
         return cr.save(clinic).getClinicId();
     }
 
+    
     @Override
     public void updateClinic(Clinic clinic) throws Exception {
+
         Clinic existing = cr.findById(clinic.getClinicId())
-                .orElseThrow(() -> new RuntimeException("Clinic not found with id: " + clinic.getClinicId()));
+                .orElseThrow(() ->
+                        new RuntimeException("Clinic not found with id: " + clinic.getClinicId()));
+
         existing.setClinicName(clinic.getClinicName());
         existing.setContactNumber(clinic.getContactNumber());
-        existing.setDoctorId(clinic.getDoctorId());
         existing.setEstablishedYear(clinic.getEstablishedYear());
         existing.setLocation(clinic.getLocation());
+
+       
+
         cr.save(existing);
     }
 
@@ -58,7 +64,6 @@ public class ClinicServiceImplJpa implements ClinicService {
         return cr.findByLocation(location);
     }
 
-    // ✅ FIXED: implemented instead of throwing UnsupportedOperationException
     @Override
     public List<Clinic> getAllClinicByDoctorId(int doctorId) {
         return cr.findAllByDoctorId(doctorId);

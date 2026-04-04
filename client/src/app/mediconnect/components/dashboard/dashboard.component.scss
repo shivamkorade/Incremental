@@ -248,3 +248,96 @@ ul {
     margin-left: 0;
   }
 }
+
+/* ===================== NEW (Book Appointment) ===================== */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+
+  h3 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.book-btn {
+  background: linear-gradient(135deg, #2979ff, #00c6ff);
+  color: #fff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 22px rgba(41, 121, 255, 0.22);
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(41, 121, 255, 0.30);
+  }
+}
+
+/* ===== Modal ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(650px, 92vw);
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #1a2e4a;
+  color: #fff;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+  }
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.modal-body {
+  padding: 18px;
+  max-height: 78vh;
+  overflow: auto;
+}
