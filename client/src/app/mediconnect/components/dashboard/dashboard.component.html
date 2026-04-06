@@ -1,190 +1,11 @@
-<!-- <div class="dashboard-root">
-
-  <nav class="navbar">
-    <div class="nav-brand">
-      <span class="brand-icon">⚕️</span>
-      <span class="brand-name">Medi<span>Connect</span></span>
-    </div>
-
-    <div class="nav-actions">
-      <span class="role-badge">{{ role }}</span>
-      <button class="logout-btn" (click)="logout()">Logout</button>
-    </div>
-  </nav>
-
-
-  <div class="dashboard-body doctor-dashboard" *ngIf="role === 'DOCTOR'">
-
-    <section class="hero" *ngIf="doctorDetails">
-      <h1>Welcome, <span>Dr. {{ doctorDetails.fullName }}</span></h1>
-      <p>{{ doctorDetails.specialty }} · {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs experience</p>
-    </section>
-
-    <section class="stats-row">
-      <div class="stat-card">
-        <div class="stat-icon">🏥</div>
-        <div class="stat-num">{{ clinics.length }}</div>
-        <div class="stat-label">Clinics</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-num">{{ selectedClinicAppointments.length }}</div>
-        <div class="stat-label">Appointments</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">🧑‍🤝‍🧑</div>
-        <div class="stat-num">{{ doctors.length }}</div>
-        <div class="stat-label">Patients</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <header>
-        <h3>Doctor Profile</h3>
-        <div>
-          <button class="btn-edit" (click)="navigateToEditDoctor()">Edit</button>
-          <button class="btn-delete" (click)="deleteDoctor()">Delete</button>
-        </div>
-      </header>
-
-      <div class="profile-grid" *ngIf="doctorDetails">
-        <div class="profile-field"><label>Name:</label><span>{{ doctorDetails.fullName }}</span></div>
-        <div class="profile-field"><label>Email:</label><span>{{ doctorDetails.email }}</span></div>
-        <div class="profile-field"><label>Specialty:</label><span>{{ doctorDetails.specialty }}</span></div>
-        <div class="profile-field"><label>Experience:</label><span>{{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs</span></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <header>
-        <h3>My Clinics</h3>
-        <a routerLink="/mediconnect/clinic/create" class="btn-primary">+ Add Clinic</a>
-      </header>
-
-      <ul class="list" *ngIf="clinics.length > 0; else noClinics">
-        <li *ngFor="let clinic of clinics"
-            (click)="onClinicSelect(clinic)"
-            [class.active]="selectedClinicId === clinic.clinicId">
-          <strong>{{ clinic.clinicName }}</strong>
-          <small>: {{ clinic.location }}</small>
-        </li>
-      </ul>
-
-      <ng-template #noClinics>
-        <div style="opacity:.75;">No clinics found.</div>
-      </ng-template>
-    </section>
-
-    <section class="card" *ngIf="selectedClinicId">
-      <header><h3>Appointments</h3></header>
-
-      <ul class="list" *ngIf="selectedClinicAppointments.length > 0; else noDocAppts">
-        <li *ngFor="let appt of selectedClinicAppointments">
-          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
-          <small>: {{ appt.purpose }}</small>
-        </li>
-      </ul>
-
-      <ng-template #noDocAppts>
-        <div style="opacity:.75;">No appointments for this clinic.</div>
-      </ng-template>
-    </section>
-
-    <section class="card" *ngIf="selectedClinicId">
-      <header><h3>Registered Patients</h3></header>
-
-      <ul class="list" *ngIf="doctors.length > 0; else noPatients">
-        <li *ngFor="let p of doctors">
-          <strong>{{ p.fullName || ('Patient #' + p.patientId) }}</strong>
-          <small>: {{ p.email || '-' }}</small>
-        </li>
-      </ul>
-
-      <ng-template #noPatients>
-        <div style="opacity:.75;">No registered patients.</div>
-      </ng-template>
-    </section>
-
-  </div>
-
-
-  <div class="dashboard-body patient-dashboard" *ngIf="role === 'PATIENT'">
-
-    <section class="hero" *ngIf="patientDetails">
-      <h1>Welcome, <span>{{ patientDetails.fullName }}</span></h1>
-      <p>Manage your appointments and health records</p>
-    </section>
-
-    <section class="stats-row">
-      <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-num">{{ appointments.length }}</div>
-        <div class="stat-label">Appointments</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">🏥</div>
-        <div class="stat-num">{{ clinics.length }}</div>
-        <div class="stat-label">Clinics</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">👨‍⚕️</div>
-        <div class="stat-num">{{ doctors.length }}</div>
-        <div class="stat-label">Doctors</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <header>
-        <h3>Patient Profile</h3>
-        <div>
-          <button class="btn-edit" (click)="navigateToEditPatient()">Edit</button>
-          <button class="btn-delete" (click)="deletePatient()">Delete</button>
-        </div>
-      </header>
-
-      <div class="profile-grid" *ngIf="patientDetails">
-        <div class="profile-field"><label>Full Name:</label><span>{{ patientDetails.fullName }}</span></div>
-        <div class="profile-field"><label>Email:</label><span>{{ patientDetails.email }}</span></div>
-        <div class="profile-field"><label>Contact:</label><span>{{ patientDetails.contactNumber }}</span></div>
-        <div class="profile-field"><label>Address:</label><span>{{ patientDetails.address }}</span></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <header>
-        <h3>My Appointments</h3>
-        <a routerLink="/mediconnect/appointment/create" class="btn-primary">+ Book Appointment</a>
-      </header>
-
-      <ul class="list" *ngIf="appointments.length > 0; else noPatAppts">
-        <li *ngFor="let appt of appointments">
-          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
-          <small>: {{ appt.purpose }}</small>
-        </li>
-      </ul>
-
-      <ng-template #noPatAppts>
-        <div style="opacity:.75;">No appointments booked yet.</div>
-      </ng-template>
-    </section>
-
-  </div>
-
-</div> -->
-
 <div class="dashboard-root">
 
-  <!-- ========== NAVBAR ========== -->
+  <!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-brand">
       <span class="brand-icon">⚕️</span>
       <span class="brand-name">Medi<span>Connect</span></span>
     </div>
-
     <div class="nav-actions">
       <span class="role-badge">{{ role }}</span>
       <button class="logout-btn" (click)="logout()">Logout</button>
@@ -194,26 +15,22 @@
   <!-- ================= DOCTOR VIEW ================= -->
   <div class="dashboard-body doctor-dashboard" *ngIf="role === 'DOCTOR'">
 
-    <!-- HERO -->
     <section class="hero" *ngIf="doctorDetails">
       <h1>Welcome, <span>Dr. {{ doctorDetails.fullName }}</span></h1>
       <p>{{ doctorDetails.specialty }} · {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs experience</p>
     </section>
 
-    <!-- STATS -->
     <section class="stats-row">
       <div class="stat-card">
         <div class="stat-icon">🏥</div>
         <div class="stat-num">{{ clinics.length }}</div>
         <div class="stat-label">Clinics</div>
       </div>
-
       <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-num">{{ selectedClinicAppointments.length }}</div>
         <div class="stat-label">Appointments</div>
       </div>
-
       <div class="stat-card">
         <div class="stat-icon">🧑‍🤝‍🧑</div>
         <div class="stat-num">{{ doctors.length }}</div>
@@ -225,29 +42,16 @@
     <section class="card">
       <header>
         <h3>Doctor Profile</h3>
-        <div>
-          <button class="btn-edit" (click)="navigateToEditDoctor()">Edit</button>
-          <button class="btn-delete" (click)="deleteDoctor()">Delete</button>
+        <div class="header-actions">
+          <button class="btn-edit" (click)="navigateToEditDoctor()">✏️ Edit</button>
+          <button class="btn-delete" (click)="deleteDoctor()">🗑️ Delete</button>
         </div>
       </header>
-
       <div class="profile-grid" *ngIf="doctorDetails">
-        <div class="profile-field">
-          <label>Name: </label>
-          <span>{{ doctorDetails.fullName }}</span>
-        </div>
-        <div class="profile-field">
-          <label>Email: </label>
-          <span>{{ doctorDetails.email }}</span>
-        </div>
-        <div class="profile-field">
-          <label>Specialty: </label>
-          <span>{{ doctorDetails.specialty }}</span>
-        </div>
-        <div class="profile-field">
-          <label>Experience: </label>
-          <span>{{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs</span>
-        </div>
+        <div class="profile-field"><label>Name</label><span>{{ doctorDetails.fullName }}</span></div>
+        <div class="profile-field"><label>Email</label><span>{{ doctorDetails.email }}</span></div>
+        <div class="profile-field"><label>Specialty</label><span>{{ doctorDetails.specialty }}</span></div>
+        <div class="profile-field"><label>Experience</label><span>{{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs</span></div>
       </div>
     </section>
 
@@ -257,38 +61,119 @@
         <h3>My Clinics</h3>
         <a routerLink="/mediconnect/clinic/create" class="btn-primary">+ Add Clinic</a>
       </header>
-
-      <ul class="list" *ngIf="clinics.length > 0; else noClinics">
+      <ul class="clinic-list" *ngIf="clinics.length > 0; else noClinics">
         <li *ngFor="let clinic of clinics"
             (click)="onClinicSelect(clinic)"
             [class.active]="selectedClinicId === clinic.clinicId">
+          <span class="clinic-icon">🏥</span>
           <div>
             <strong>{{ clinic.clinicName }}</strong>
             <small>{{ clinic.location }}</small>
           </div>
         </li>
       </ul>
-
-      <ng-template #noClinics>
-        <div class="empty-state">No clinics found.</div>
-      </ng-template>
+      <ng-template #noClinics><div class="empty-state">No clinics found.</div></ng-template>
     </section>
 
-    <!-- APPOINTMENTS -->
+    <!-- APPOINTMENT REQUESTS -->
     <section class="card" *ngIf="selectedClinicId">
-      <header><h3>Appointments</h3></header>
+      <header><h3>📋 Appointment Requests</h3></header>
 
-      <ul class="list" *ngIf="selectedClinicAppointments.length > 0; else noDocAppts">
-        <li *ngFor="let appt of selectedClinicAppointments">
-          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
-          <!-- <strong>{{ appt.patientId}}</strong> -->
-          <small>{{ appt.purpose }}</small>
+      <ul class="appt-list" *ngIf="selectedClinicAppointments.length > 0; else noDocAppts">
+        <li *ngFor="let appt of selectedClinicAppointments" class="appt-card">
+
+          <!-- Patient Details -->
+          <div class="appt-patient-info">
+            <div class="patient-avatar">{{ (appt.patient?.fullName || 'P')[0].toUpperCase() }}</div>
+            <div class="patient-meta">
+              <strong>{{ appt.patient?.fullName || ('Patient #' + appt.patient?.patientId) }}</strong>
+              <span>{{ appt.patient?.email || '—' }}</span>
+              <span>📞 {{ appt.patient?.contactNumber || '—' }}</span>
+            </div>
+          </div>
+
+          <!-- Appointment Details -->
+          <div class="appt-details-row">
+            <div class="appt-detail-item">
+              <span class="detail-label">Date</span>
+              <span>{{ appt.appointmentDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="appt-detail-item">
+              <span class="detail-label">Purpose</span>
+              <span>{{ appt.purpose }}</span>
+            </div>
+            <div class="appt-detail-item">
+              <span class="detail-label">Status</span>
+              <span class="status-badge"
+                [class.status-pending]="appt.status === 'Scheduled'"
+                [class.status-approved]="appt.status === 'Approved'"
+                [class.status-rejected]="appt.status === 'Rejected'"
+                [class.status-canceled]="appt.status === 'Canceled'"
+                [class.status-paid]="appt.status === 'Paid'">
+                {{ appt.status }}
+              </span>
+            </div>
+            <!-- Payment info once paid -->
+            <div class="appt-detail-item" *ngIf="billCache[appt.appointmentId]?.status === 'Paid'">
+              <span class="detail-label">Payment</span>
+              <span class="payment-method-tag">
+                💳 {{ billCache[appt.appointmentId]?.paymentMethod | titlecase }} — Paid ✅
+              </span>
+            </div>
+            <div class="appt-detail-item" *ngIf="appt.status === 'Approved' && billCache[appt.appointmentId]?.status !== 'Paid'">
+              <span class="detail-label">Payment</span>
+              <span class="status-badge status-pending">⏳ Payment Pending</span>
+            </div>
+          </div>
+
+          <!-- Doctor Notes Preview -->
+          <div class="notes-preview" *ngIf="appt.doctorNotes">
+            <span class="detail-label">📝 Your Notes:</span>
+            <p>{{ appt.doctorNotes }}</p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="appt-actions">
+            <ng-container *ngIf="appt.status === 'Scheduled'">
+              <button class="btn-approve" (click)="approveAppointment(appt)">✓ Approve</button>
+              <button class="btn-reject" (click)="rejectAppointment(appt)">✗ Reject</button>
+            </ng-container>
+            <button class="btn-cancel-small"
+              *ngIf="appt.status === 'Approved' || appt.status === 'Scheduled'"
+              (click)="cancelAppointment(appt)">
+              🚫 Cancel
+            </button>
+            <button class="btn-notes"
+              *ngIf="appt.status === 'Approved' || billCache[appt.appointmentId]?.status === 'Paid'"
+              (click)="openNotesModal(appt)">
+              📝 {{ appt.doctorNotes ? 'Edit Notes' : 'Add Notes' }}
+            </button>
+          </div>
         </li>
       </ul>
+      <ng-template #noDocAppts><div class="empty-state">No appointment requests yet.</div></ng-template>
+    </section>
 
-      <ng-template #noDocAppts>
-        <div class="empty-state">No appointments for this clinic.</div>
-      </ng-template>
+    <!-- PATIENTS WITH REPORTS -->
+    <section class="card" *ngIf="selectedClinicId && doctors.length > 0">
+      <header><h3>👥 Patients & Reports</h3></header>
+      <ul class="patients-list">
+        <li *ngFor="let p of doctors" class="patient-row">
+          <div class="patient-avatar">{{ (p.fullName || 'P')[0].toUpperCase() }}</div>
+          <div class="patient-info-col">
+            <strong>{{ p.fullName || ('Patient #' + p.patientId) }}</strong>
+            <small>{{ p.email || '—' }}</small>
+          </div>
+          <!-- Show notes from matching appointment -->
+          <div class="patient-report-col">
+            <ng-container *ngFor="let appt of selectedClinicAppointments">
+              <div *ngIf="appt.patient?.patientId === p.patientId && appt.doctorNotes" class="report-chip">
+                📋 {{ appt.appointmentDate | date:'shortDate' }}: {{ appt.doctorNotes | slice:0:80 }}{{ appt.doctorNotes.length > 80 ? '…' : '' }}
+              </div>
+            </ng-container>
+          </div>
+        </li>
+      </ul>
     </section>
 
   </div>
@@ -296,26 +181,22 @@
   <!-- ================= PATIENT VIEW ================= -->
   <div class="dashboard-body patient-dashboard" *ngIf="role === 'PATIENT'">
 
-    <!-- HERO -->
     <section class="hero" *ngIf="patientDetails">
       <h1>Welcome, <span>{{ patientDetails.fullName }}</span></h1>
       <p>Manage your appointments and health records</p>
     </section>
 
-    <!-- STATS -->
     <section class="stats-row">
       <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-num">{{ appointments.length }}</div>
         <div class="stat-label">Appointments</div>
       </div>
-
       <div class="stat-card">
         <div class="stat-icon">🏥</div>
         <div class="stat-num">{{ clinics.length }}</div>
         <div class="stat-label">Clinics</div>
       </div>
-
       <div class="stat-card">
         <div class="stat-icon">👨‍⚕️</div>
         <div class="stat-num">{{ doctors.length }}</div>
@@ -327,17 +208,16 @@
     <section class="card">
       <header>
         <h3>Patient Profile</h3>
-        <div>
-          <button class="btn-edit" (click)="navigateToEditPatient()">Edit</button>
-          <button class="btn-delete" (click)="deletePatient()">Delete</button>
+        <div class="header-actions">
+          <button class="btn-edit" (click)="navigateToEditPatient()">✏️ Edit</button>
+          <button class="btn-delete" (click)="deletePatient()">🗑️ Delete</button>
         </div>
       </header>
-
       <div class="profile-grid" *ngIf="patientDetails">
-        <div class="profile-field"><label>Name:  </label><span>{{ patientDetails.fullName }}</span></div>
-        <div class="profile-field"><label>Email:  </label><span>{{ patientDetails.email }}</span></div>
-        <div class="profile-field"><label>Contact:  </label><span>{{ patientDetails.contactNumber }}</span></div>
-        <div class="profile-field"><label>Address:  </label><span>{{ patientDetails.address }}</span></div>
+        <div class="profile-field"><label>Name</label><span>{{ patientDetails.fullName }}</span></div>
+        <div class="profile-field"><label>Email</label><span>{{ patientDetails.email }}</span></div>
+        <div class="profile-field"><label>Contact</label><span>{{ patientDetails.contactNumber }}</span></div>
+        <div class="profile-field"><label>Address</label><span>{{ patientDetails.address }}</span></div>
       </div>
     </section>
 
@@ -345,24 +225,180 @@
     <section class="card">
       <header>
         <h3>My Appointments</h3>
-        <a routerLink="/mediconnect/appointment/create" class="btn-primary">+ Book Appointment</a>
+        <a routerLink="/mediconnect/appointment/create" class="btn-primary">+ Book</a>
       </header>
 
-      <ul class="list" *ngIf="appointments.length > 0; else noPatAppts">
-        <li *ngFor="let appt of appointments">
-          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
-          <div class="clinic-info">
-            🏥 {{ appt.clinic?.clinicName }} – {{ appt.clinic?.location }}
+      <ul class="appt-list" *ngIf="appointments.length > 0; else noPatAppts">
+        <li *ngFor="let appt of appointments" class="appt-card patient-appt-card">
+
+          <div class="appt-top-row">
+            <div class="appt-date-block">
+              <span class="appt-day">{{ appt.appointmentDate | date:'d' }}</span>
+              <span class="appt-month">{{ appt.appointmentDate | date:'MMM' }}</span>
+            </div>
+            <div class="appt-main-info">
+              <strong>{{ appt.clinic?.clinicName || 'Clinic' }}</strong>
+              <small>📍 {{ appt.clinic?.location }}</small>
+              <small>🩺 {{ appt.purpose }}</small>
+            </div>
+            <div class="appt-status-col">
+              <span class="status-badge"
+                [class.status-pending]="appt.status === 'Scheduled'"
+                [class.status-approved]="appt.status === 'Approved'"
+                [class.status-rejected]="appt.status === 'Rejected'"
+                [class.status-canceled]="appt.status === 'Canceled'">
+                {{ appt.status }}
+              </span>
+            </div>
           </div>
-          <small>{{ appt.purpose }}</small>
+
+          <!-- Doctor Notes visible to patient -->
+          <div class="doctor-report-box" *ngIf="appt.doctorNotes">
+            <div class="report-header">📋 Doctor's Report</div>
+            <p>{{ appt.doctorNotes }}</p>
+          </div>
+
+          <!-- Billing area -->
+          <div class="billing-row" *ngIf="appt.status === 'Approved'">
+            <ng-container *ngIf="billCache[appt.appointmentId] as bill; else noBillYet">
+              <!-- Paid -->
+              <div class="paid-banner" *ngIf="bill.status === 'Paid'">
+                ✅ Paid via <strong>{{ bill.paymentMethod | titlecase }}</strong> — ₹{{ bill.amount }}
+              </div>
+              <!-- Pending -->
+              <div class="pay-prompt" *ngIf="bill.status !== 'Paid'">
+                <span>💰 Consultation fee: <strong>₹{{ bill.amount }}</strong></span>
+                <button class="btn-pay" (click)="openBillingModal(appt)">💳 Pay Now</button>
+              </div>
+            </ng-container>
+            <ng-template #noBillYet>
+              <div class="bill-pending-note">⏳ Bill not yet generated by doctor.</div>
+            </ng-template>
+          </div>
+
         </li>
       </ul>
-
-      <ng-template #noPatAppts>
-        <div class="empty-state">No appointments booked yet.</div>
-      </ng-template>
+      <ng-template #noPatAppts><div class="empty-state">No appointments booked yet.</div></ng-template>
     </section>
 
+  </div>
+
+  <!-- ================= BILLING MODAL ================= -->
+  <div class="modal-overlay" *ngIf="showBillingModal" (click)="closeBillingModal()">
+    <div class="modal-box billing-modal" (click)="$event.stopPropagation()">
+      <button class="modal-close-btn" (click)="closeBillingModal()">✕</button>
+
+      <!-- Success -->
+      <div *ngIf="paymentSuccess" class="payment-success-screen">
+        <div class="success-anim">✅</div>
+        <h2>Payment Successful!</h2>
+        <p>Your appointment is confirmed. See you at the clinic!</p>
+        <button class="btn-pay-confirm" (click)="closeBillingModal()">Done</button>
+      </div>
+
+      <!-- Bill not found -->
+      <div *ngIf="!paymentSuccess && selectedBill?._notFound" class="no-bill-screen">
+        <div class="no-bill-icon">🧾</div>
+        <h2>Bill Not Ready Yet</h2>
+        <p>The doctor hasn't generated your bill yet. Please check back shortly.</p>
+        <button class="btn-secondary" (click)="closeBillingModal()">Close</button>
+      </div>
+
+      <!-- Bill found -->
+      <div *ngIf="!paymentSuccess && selectedBill && !selectedBill._notFound">
+        <div class="modal-header-row">
+          <span class="modal-icon">🏥</span>
+          <h2>Billing Summary</h2>
+        </div>
+
+        <div class="bill-card">
+          <div class="bill-row">
+            <span>Consultation Fee</span>
+            <strong class="bill-amount">₹{{ selectedBill.amount }}</strong>
+          </div>
+          <div class="bill-row">
+            <span>Issue Date</span>
+            <span>{{ selectedBill.dateOfIssue | date:'mediumDate' }}</span>
+          </div>
+          <div class="bill-row">
+            <span>Due Date</span>
+            <span>{{ selectedBill.dueDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="bill-row">
+            <span>Status</span>
+            <span class="status-badge"
+              [class.status-approved]="selectedBill.status === 'Paid'"
+              [class.status-pending]="selectedBill.status !== 'Paid'">
+              {{ selectedBill.status }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Already Paid -->
+        <div *ngIf="selectedBill.status === 'Paid'" class="already-paid-box">
+          <div class="already-paid-icon">✅</div>
+          <p>This bill has already been paid via <strong>{{ selectedBill.paymentMethod | titlecase }}</strong>.</p>
+          <button class="btn-secondary" (click)="closeBillingModal()">Close</button>
+        </div>
+
+        <!-- Payment form -->
+        <div *ngIf="selectedBill.status !== 'Paid'" class="payment-form">
+          <p class="payment-label">Choose Payment Method</p>
+          <div class="payment-options">
+            <label class="pay-option" [class.selected]="selectedPaymentMethod === 'upi'">
+              <input type="radio" name="pm" value="upi" [(ngModel)]="selectedPaymentMethod">
+              <span class="pay-icon">📱</span> UPI
+            </label>
+            <label class="pay-option" [class.selected]="selectedPaymentMethod === 'card'">
+              <input type="radio" name="pm" value="card" [(ngModel)]="selectedPaymentMethod">
+              <span class="pay-icon">💳</span> Card
+            </label>
+            <label class="pay-option" [class.selected]="selectedPaymentMethod === 'cash'">
+              <input type="radio" name="pm" value="cash" [(ngModel)]="selectedPaymentMethod">
+              <span class="pay-icon">💵</span> Cash
+            </label>
+          </div>
+          <button class="btn-pay-confirm" (click)="payBill()">
+            Pay ₹{{ selectedBill.amount }} via {{ selectedPaymentMethod | titlecase }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DOCTOR NOTES MODAL ================= -->
+  <div class="modal-overlay" *ngIf="showNotesModal" (click)="closeNotesModal()">
+    <div class="modal-box notes-modal" (click)="$event.stopPropagation()">
+      <button class="modal-close-btn" (click)="closeNotesModal()">✕</button>
+
+      <div *ngIf="notesSaved" class="notes-saved-screen">
+        <div class="success-anim">📋</div>
+        <h2>Notes Saved!</h2>
+        <p>The patient will be able to see your report on their portal.</p>
+        <button class="btn-pay-confirm" (click)="closeNotesModal()">Done</button>
+      </div>
+
+      <div *ngIf="!notesSaved">
+        <div class="modal-header-row">
+          <span class="modal-icon">📝</span>
+          <h2>Patient Report / Notes</h2>
+        </div>
+        <p class="notes-patient-name" *ngIf="selectedApptForNotes">
+          Patient: <strong>{{ selectedApptForNotes.patient?.fullName || 'Patient' }}</strong>
+          &nbsp;·&nbsp; {{ selectedApptForNotes.appointmentDate | date:'mediumDate' }}
+        </p>
+        <textarea
+          class="notes-textarea"
+          [(ngModel)]="notesInput"
+          placeholder="Write a brief report, diagnosis, prescription or follow-up instructions for the patient..."
+          rows="6">
+        </textarea>
+        <div class="notes-actions">
+          <button class="btn-secondary" (click)="closeNotesModal()">Cancel</button>
+          <button class="btn-pay-confirm" (click)="saveDoctorNotes()">💾 Save Notes</button>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

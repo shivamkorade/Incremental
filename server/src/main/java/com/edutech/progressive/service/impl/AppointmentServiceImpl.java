@@ -27,13 +27,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void updateAppointment(Appointment appointment) {
-        Appointment oldAppointment = appointmentRepository.findById(appointment.getAppointmentId()).orElseThrow();
-        oldAppointment.setAppointmentDate(appointment.getAppointmentDate());
-        oldAppointment.setClinic(appointment.getClinic());
-        oldAppointment.setPatient(appointment.getPatient());
-        oldAppointment.setPurpose(appointment.getPurpose());
-        oldAppointment.setStatus(appointment.getStatus());
-        appointmentRepository.save(oldAppointment);
+        Appointment old = appointmentRepository.findById(appointment.getAppointmentId()).orElseThrow();
+        old.setAppointmentDate(appointment.getAppointmentDate());
+        old.setClinic(appointment.getClinic());
+        old.setPatient(appointment.getPatient());
+        old.setPurpose(appointment.getPurpose());
+        old.setStatus(appointment.getStatus());
+        if (appointment.getDoctorNotes() != null) {
+            old.setDoctorNotes(appointment.getDoctorNotes());
+        }
+        appointmentRepository.save(old);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-public List<com.edutech.progressive.entity.Patient> getPatientsByDoctorId(int doctorId) {
-    return appointmentRepository.findPatientsByDoctorId(doctorId);
-}
+    public List<com.edutech.progressive.entity.Patient> getPatientsByDoctorId(int doctorId) {
+        return appointmentRepository.findPatientsByDoctorId(doctorId);
+    }
 }

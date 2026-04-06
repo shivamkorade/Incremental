@@ -45,7 +45,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/auth',  // Redirect to 'auth' route by default
+    redirectTo: '/home',  // Redirect to 'auth' route by default
   }
 ];
 

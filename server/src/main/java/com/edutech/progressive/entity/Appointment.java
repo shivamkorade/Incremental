@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Appointment {
 
     @Id
@@ -16,12 +16,12 @@ public class Appointment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Clinic clinic;
 
     @Temporal(TemporalType.DATE)
@@ -31,32 +31,65 @@ public class Appointment {
     private String status;
     private String purpose;
 
-    public Appointment() {}
+    @Column(length = 2000)
+    private String doctorNotes;
 
-    public Appointment(int appointmentId, Patient patient, Clinic clinic, Date appointmentDate, String status, String purpose) {
+    public Appointment() {
+    }
+
+    public int getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Clinic getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(Clinic clinic) {
         this.clinic = clinic;
+    }
+
+    public Date getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(Date appointmentDate) {
         this.appointmentDate = appointmentDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
 
-    public int getAppointmentId() { return appointmentId; }
-    public void setAppointmentId(int appointmentId) { this.appointmentId = appointmentId; }
+    public String getDoctorNotes() {
+        return doctorNotes;
+    }
 
-    public Patient getPatient() { return patient; }
-    public void setPatient(Patient patient) { this.patient = patient; }
-
-    public Clinic getClinic() { return clinic; }
-    public void setClinic(Clinic clinic) { this.clinic = clinic; }
-
-    public Date getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(Date appointmentDate) { this.appointmentDate = appointmentDate; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public String getPurpose() { return purpose; }
-    public void setPurpose(String purpose) { this.purpose = purpose; }
+    public void setDoctorNotes(String doctorNotes) {
+        this.doctorNotes = doctorNotes;
+    }
 }

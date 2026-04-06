@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/appointment")
@@ -50,14 +51,17 @@ public class AppointmentController {
     public ResponseEntity<?> createAppointment(@RequestBody Appointment appointment) {
         try {
             int id = appointmentService.createAppointment(appointment);
-            return new ResponseEntity<>(java.util.Map.of("message", "Appointment created successfully", "appointmentId", id), HttpStatus.CREATED);
+            return new ResponseEntity<>(Map.of("message", "Appointment created successfully", "appointmentId", id),
+                    HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(java.util.Map.of("message", "Failed to create appointment: " + e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Failed to create appointment: " + e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{appointmentId}")
-    public ResponseEntity<Void> updateAppointment(@PathVariable int appointmentId, @RequestBody Appointment appointment) {
+    public ResponseEntity<Void> updateAppointment(@PathVariable int appointmentId,
+            @RequestBody Appointment appointment) {
         appointment.setAppointmentId(appointmentId);
         appointmentService.updateAppointment(appointment);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -75,11 +79,44 @@ public class AppointmentController {
         }
     }
 
+    @PutMapping("/{appointmentId}/approve")
+    public ResponseEntity<?> approveAppointment(@PathVariable int appointmentId) {
+        try {
+            Appointment appt = appointmentService.getAppointmentById(appointmentId);
+            appt.setStatus("Approved");
+            appointmentService.updateAppointment(appt);
+            return new ResponseEntity<>(Map.of("message", "Appointment approved"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "Not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{appointmentId}/reject")
+    public ResponseEntity<?> rejectAppointment(@PathVariable int appointmentId) {
+        try {
+            Appointment appt = appointmentService.getAppointmentById(appointmentId);
+            appt.setStatus("Rejected");
+            appointmentService.updateAppointment(appt);
+            return new ResponseEntity<>(Map.of("message", "Appointment rejected"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "Not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{appointmentId}/notes")
+    public ResponseEntity<?> addDoctorNotes(@PathVariable int appointmentId, @RequestBody Map<String, String> body) {
+        try {
+            Appointment appt = appointmentService.getAppointmentById(appointmentId);
+            appt.setDoctorNotes(body.get("doctorNotes"));
+            appointmentService.updateAppointment(appt);
+            return new ResponseEntity<>(Map.of("message", "Notes saved"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "Not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/patients/doctor/{doctorId}")
-public ResponseEntity<?> getPatientsByDoctor(@PathVariable int doctorId) {
-    return new ResponseEntity<>(
-            appointmentService.getPatientsByDoctorId(doctorId),
-            HttpStatus.OK
-    );
-}
+    public ResponseEntity<?> getPatientsByDoctor(@PathVariable int doctorId) {
+        return new ResponseEntity<>(appointmentService.getPatientsByDoctorId(doctorId), HttpStatus.OK);
+    }
 }

@@ -1,36 +1,3 @@
-// package com.wecp.progressive.controller;
-
-// import com.wecp.progressive.entity.Billing;
-// import org.springframework.http.ResponseEntity;
-
-// import java.util.List;
-
-// public class BillingController {
-
-//     public ResponseEntity<List<Billing>> getAllBills() {
-//         return null;
-//     }
-
-//     public ResponseEntity<Integer> createBill(Billing billing) {
-//         return null;
-//     }
-
-//     public ResponseEntity<Integer> deleteBill(Billing billing) {
-//         return null;
-//     }
-
-//     public ResponseEntity<List<Billing>> getBillsByBillingID(int billingId) {
-//         return null;
-//     }
-
-//     public ResponseEntity<List<Billing>> getBillsByPatient(int patientId) {
-//         return null;
-//     }
-// }
-
-
-
-
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Billing;
@@ -67,17 +34,36 @@ public class BillingController {
 
     @GetMapping("/{billingId}")
     public ResponseEntity<Billing> getBillsByBillingId(@PathVariable int billingId) {
-        //Billing bill = billingService.getBillById(billingId);
-        // if (bill != null) {
-        //     return new ResponseEntity<>(bill, HttpStatus.OK);
-        // } else {
-        //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        // }
         return ResponseEntity.ok(billingService.getBillById(billingId));
     }
 
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<Billing>> getBillsByPatient(@PathVariable int patientId) {
         return new ResponseEntity<>(billingService.getBillsByPatientId(patientId), HttpStatus.OK);
+    }
+
+    @GetMapping("/appointment/{appointmentId}")
+    public ResponseEntity<?> getBillByAppointment(@PathVariable int appointmentId) {
+        List<Billing> bills = billingService.getAllBills();
+        return bills.stream()
+                .filter(b -> b.getAppointmentId() != null && b.getAppointmentId() == appointmentId)
+                .findFirst()
+                .<ResponseEntity<?>>map(b -> ResponseEntity.ok(b))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{billingId}")
+    public ResponseEntity<?> updateBill(@PathVariable int billingId, @RequestBody Billing billing) {
+        Billing existing = billingService.getBillById(billingId);
+        if (existing == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (billing.getStatus() != null)
+            existing.setStatus(billing.getStatus());
+        if (billing.getPaymentMethod() != null)
+            existing.setPaymentMethod(billing.getPaymentMethod());
+        if (billing.getAmount() > 0)
+            existing.setAmount(billing.getAmount());
+        billingService.createBill(existing);
+        return new ResponseEntity<>(existing, HttpStatus.OK);
     }
 }
