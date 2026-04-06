@@ -98,6 +98,7 @@ export class MediConnectService {
 
   // ---------------- APPOINTMENT ----------------
   getAllAppointments(): Observable<any[]> {
+    console.log("getting appointments");
     return this.http.get<any[]>(`${this.apiUrl}/appointment`, this.getAuthHeaders());
   }
 
@@ -107,6 +108,7 @@ export class MediConnectService {
 
   // ✅ FIXED: matches backend -> /appointment/patient/{patientId}
   getAppointmentsByPatient(patientId: number): Observable<any[]> {
+    console.log("getting appointment by id:",patientId);
     return this.http.get<any[]>(`${this.apiUrl}/appointment/patient/${patientId}`, this.getAuthHeaders());
   }
 
@@ -126,13 +128,20 @@ export class MediConnectService {
   }
 
   // ✅ FIXED: expects backend response { message, appointmentId }
-  createAppointment(data: any): Observable<{ message: string; appointmentId: number }> {
-    return this.http.post<{ message: string; appointmentId: number }>(
-      `${this.apiUrl}/appointment`,
-      data,
-      this.getAuthHeaders()
-    );
-  }
+  // createAppointment(data: any): Observable<{ message: string; appointmentId: number }> {
+  //   return this.http.post<{ message: string; appointmentId: number }>(
+  //     `${this.apiUrl}/appointment`,
+  //     data,
+  //     this.getAuthHeaders()
+  //   );
+  // }
+  createAppointment(data: any): Observable<any> {
+  return this.http.post<any>(
+    `${this.apiUrl}/appointment`,
+    data,
+    this.getAuthHeaders()
+  );
+}
 
   updateAppointment(data: any): Observable<any> {
     return this.http.put<any>(

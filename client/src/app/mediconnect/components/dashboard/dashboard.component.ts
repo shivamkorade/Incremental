@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MediConnectService } from '../../services/mediconnect.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   role: string = '';
   doctorId!: number;
@@ -18,28 +19,76 @@ export class DashboardComponent implements OnInit {
   patientDetails: any = null;
 
   clinics: any[] = [];
-  appointments: any[] = [];
-  doctors: any[] = []; // ✅ REGISTERED PATIENTS (derived from appointments)
+  appointments: any[] = [];         // ✅ PATIENT appointments list
+  doctors: any[] = [];              // DOCTOR view: derived patients OR patient view: all doctors
 
   selectedClinicId?: number;
-  selectedClinicAppointments: any[] = [];
+  selectedClinicAppointments: any[] = [];  // ✅ DOCTOR clinic appointments list
 
-  showBookingModal: boolean = false;
+  private navSub?: Subscription;
+  private qpSub?: Subscription;
 
-  constructor(private service: MediConnectService, private router: Router) {}
+  constructor(
+    private service: MediConnectService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.initFromStorage();
+    this.loadByRole();
+    this.loadAllAppointments();
+
+    // ✅ When you navigate back to dashboard, reload again (fixes stale view)
+    this.navSub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.initFromStorage();
+        this.loadByRole();
+      });
+
+    // ✅ If we pass ?refresh=timestamp, reload (works even if component reused)
+    this.qpSub = this.route.queryParams.subscribe(params => {
+      if (params['refresh']) {
+        this.initFromStorage();
+        this.loadByRole();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.navSub?.unsubscribe();
+    this.qpSub?.unsubscribe();
+  }
+
+  loadAllAppointments() {
+    console.log("appointment");
+    const patient_id = Number(localStorage.getItem('patient_id'));
+    console.log(patient_id);
+    this.service.getAppointmentsByPatient(patient_id).subscribe(data => {
+      console.log(data);
+      this.appointments = data;
+    })
+  }
+
+  private initFromStorage(): void {
     this.role = (localStorage.getItem('role') || '').trim().toUpperCase();
     this.userId = Number(localStorage.getItem('user_id'));
 
+    this.doctorId = Number(localStorage.getItem('doctor_id'));
+    this.patientId = Number(localStorage.getItem('patient_id'));
+
+    // Helpful debug (optional)
+    // console.log('ROLE:', this.role, 'doctorId:', this.doctorId, 'patientId:', this.patientId);
+  }
+
+  private loadByRole(): void {
     if (this.role === 'DOCTOR') {
-      this.doctorId = Number(localStorage.getItem('doctor_id'));
       if (!this.doctorId) return;
       this.loadDoctorData();
     }
 
     if (this.role === 'PATIENT') {
-      this.patientId = Number(localStorage.getItem('patient_id'));
       if (!this.patientId) return;
       this.loadPatientData();
     }
@@ -53,39 +102,44 @@ export class DashboardComponent implements OnInit {
   // ===================== DOCTOR =====================
 
   loadDoctorData(): void {
-
     this.service.getDoctorById(this.doctorId).subscribe({
       next: doctor => this.doctorDetails = doctor,
       error: () => this.doctorDetails = null
     });
 
     this.service.getClinicsByDoctorId(this.doctorId).subscribe({
-      next: clinics => this.clinics = clinics,
+      next: clinics => {
+        this.clinics = clinics || [];
+
+        // Optional: auto-select first clinic to show appointments immediately
+        if (this.clinics.length > 0) {
+          this.onClinicSelect(this.clinics[0]);
+        }
+      },
       error: () => this.clinics = []
     });
 
-    // ✅ clear patients until clinic is selected
     this.doctors = [];
   }
 
   onClinicSelect(clinic: any): void {
-    this.selectedClinicId = clinic.clinicId;
-    this.loadAppointments(clinic.clinicId);
+    this.selectedClinicId = clinic?.clinicId;
+    if (this.selectedClinicId) {
+      this.loadAppointments(this.selectedClinicId);
+    }
   }
 
-  // ✅ OPTION 1 CORE LOGIC
   loadAppointments(clinicId: number): void {
     this.service.getAppointmentsByClinic(clinicId).subscribe({
       next: appts => {
-        this.selectedClinicAppointments = appts;
+        this.selectedClinicAppointments = appts || [];
 
-        // ✅ derive unique patients from appointments
+        // derive unique patients from appointments (doctor view)
         const patientMap = new Map<number, any>();
-
-        appts.forEach(a => {
-          if (a.patient) {
-            patientMap.set(a.patient.patientId, a.patient);
-          }
+        (appts || []).forEach(a => {
+          const p = a?.patient || a?.patientDetails || null;
+          const pid = p?.patientId || a?.patientId || null;
+          if (pid) patientMap.set(pid, p || { patientId: pid });
         });
 
         this.doctors = Array.from(patientMap.values());
@@ -101,28 +155,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/mediconnect/doctor/edit', this.doctorId]);
   }
 
-  navigateToEditClinic(clinicId: number): void {
-    this.router.navigate(['/mediconnect/clinic/edit', clinicId]);
-  }
-
   deleteDoctor(): void {
     if (confirm('Are you sure you want to delete your profile?')) {
       this.service.deleteDoctor(this.doctorId).subscribe(() => {
         localStorage.clear();
         this.router.navigate(['/auth/login']);
-      });
-    }
-  }
-
-  deleteClinic(clinicId: number): void {
-    if (confirm('Delete this clinic?')) {
-      this.service.deleteClinic(clinicId).subscribe(() => {
-        this.clinics = this.clinics.filter(c => c.clinicId !== clinicId);
-        if (this.selectedClinicId === clinicId) {
-          this.selectedClinicId = undefined;
-          this.selectedClinicAppointments = [];
-          this.doctors = [];
-        }
       });
     }
   }
@@ -141,24 +178,28 @@ export class DashboardComponent implements OnInit {
   // ===================== PATIENT =====================
 
   loadPatientData(): void {
-
     this.service.getPatientById(this.patientId).subscribe({
       next: patient => this.patientDetails = patient,
       error: () => this.patientDetails = null
     });
 
-    this.service.getAppointmentsByPatient(this.patientId).subscribe({
-      next: appointments => this.appointments = appointments,
-      error: () => this.appointments = []
-    });
+    // this.service.getAppointmentsByPatient(this.patientId).subscribe({
+    //   next: appts => {
+    //     // console.log('Patient appointments:', appts);
+    //     this.appointments = appts || [];
+    //   },
+    //   error: () => {
+    //     this.appointments = [];
+    //   }
+    // });
 
     this.service.getAllClinics().subscribe({
-      next: clinics => this.clinics = clinics,
+      next: clinics => this.clinics = clinics || [],
       error: () => this.clinics = []
     });
 
     this.service.getAllDoctors().subscribe({
-      next: doctors => this.doctors = doctors,
+      next: doctors => this.doctors = doctors || [],
       error: () => this.doctors = []
     });
   }

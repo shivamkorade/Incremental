@@ -1,10 +1,10 @@
 <div class="clinic-create-container">
   <div class="create-card">
-    <h2>Create Clinic</h2>
+    <h2>Add Clinic</h2>
 
     <!-- Doctor info (readonly) -->
     <div class="doctor-info" *ngIf="doctor">
-      <span>👨‍⚕️ Creating clinic for: <strong>{{ doctor.fullName }}</strong></span>
+      <span>👨‍⚕️ Adding clinic for: <strong>Dr. {{ doctor.fullName }}</strong></span>
     </div>
 
     <form [formGroup]="clinicForm" (ngSubmit)="onSubmit()">
@@ -43,7 +43,7 @@
 
       <div class="btn-group">
         <button type="submit" class="submit-btn" [disabled]="clinicForm.invalid">
-          Create Clinic
+          Add Clinic
         </button>
         <button type="button" class="back-btn" (click)="goBack()">
           Back to Dashboard
@@ -52,7 +52,7 @@
 
     </form>
 
-    <p *ngIf="successMessage" class="success-msg">✅ {{ successMessage }}</p>
-    <p *ngIf="errorMessage" class="error-msg-global">❌ {{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="success-msg"> {{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error-msg-global"> {{ errorMessage }}</p>
   </div>
 </div>  

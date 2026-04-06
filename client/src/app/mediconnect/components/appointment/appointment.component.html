@@ -1,4 +1,4 @@
-<div class="appointment-form">
+<!-- <div class="appointment-form">
   <h2>Book Appointment</h2>
 
   <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
@@ -6,6 +6,33 @@
     <select formControlName="clinic">
       <option [ngValue]="null" disabled selected>Select clinic</option>
       <option *ngFor="let clinic of clinics" [ngValue]="clinic">
+        {{ clinic.clinicName }}
+      </option>
+    </select>
+
+    <label>Date:</label>
+    <input type="date" formControlName="appointmentDate" [min]="today" />
+
+    <label>Purpose:</label>
+    <input type="text" formControlName="purpose" placeholder="Reason for visit" />
+
+    <button type="submit" [disabled]="appointmentForm.invalid">Book</button>
+  </form>
+
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div> -->
+
+
+<div class="appointment-form">
+  <h2>Book Appointment</h2>
+
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+
+    <label>Clinic:</label>
+    <select formControlName="clinicId">
+      <option value="" disabled>Select clinic</option>
+      <option *ngFor="let clinic of clinics" [value]="clinic.clinicId">
         {{ clinic.clinicName }}
       </option>
     </select>

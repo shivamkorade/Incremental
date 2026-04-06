@@ -1,214 +1,368 @@
-<div class="dashboard">
+<!-- <div class="dashboard-root">
 
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="nav-brand">
       <span class="brand-icon">⚕️</span>
-      <span class="brand-name">Medi<span class="accent">Connect</span></span>
+      <span class="brand-name">Medi<span>Connect</span></span>
     </div>
-    <div class="nav-right">
-      <span class="nav-role-badge">{{ role }}</span>
-      <button class="logout-btn" (click)="logout()">Sign Out</button>
+
+    <div class="nav-actions">
+      <span class="role-badge">{{ role }}</span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
   </nav>
 
-  <!-- ===================== DOCTOR VIEW ===================== -->
-  <div class="dashboard-body" *ngIf="role === 'DOCTOR'">
 
-    <!-- Welcome -->
-    <div class="welcome-header" *ngIf="doctorDetails">
-      <div class="welcome-label">Good day</div>
-      <div class="welcome-name">Dr. {{ doctorDetails.fullName }}</div>
-      <div class="welcome-sub">
-        {{ doctorDetails.specialty }} ·
-        {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} years experience
-      </div>
-    </div>
+  <div class="dashboard-body doctor-dashboard" *ngIf="role === 'DOCTOR'">
 
-    <!-- Stats -->
-    <div class="stats-row">
+    <section class="hero" *ngIf="doctorDetails">
+      <h1>Welcome, <span>Dr. {{ doctorDetails.fullName }}</span></h1>
+      <p>{{ doctorDetails.specialty }} · {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs experience</p>
+    </section>
+
+    <section class="stats-row">
       <div class="stat-card">
         <div class="stat-icon">🏥</div>
         <div class="stat-num">{{ clinics.length }}</div>
-        <div class="stat-lbl">Clinics</div>
+        <div class="stat-label">Clinics</div>
       </div>
+
       <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-num">{{ selectedClinicAppointments.length }}</div>
-        <div class="stat-lbl">Appointments</div>
+        <div class="stat-label">Appointments</div>
       </div>
+
       <div class="stat-card">
         <div class="stat-icon">🧑‍🤝‍🧑</div>
         <div class="stat-num">{{ doctors.length }}</div>
-        <div class="stat-lbl">Patients</div>
+        <div class="stat-label">Patients</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Doctor Profile -->
-    <div class="card">
-      <div class="card-header">
-        <h3>👨‍⚕️ Doctor Profile</h3>
-        <div class="btn-group">
+    <section class="card">
+      <header>
+        <h3>Doctor Profile</h3>
+        <div>
           <button class="btn-edit" (click)="navigateToEditDoctor()">Edit</button>
           <button class="btn-delete" (click)="deleteDoctor()">Delete</button>
         </div>
-      </div>
+      </header>
 
-      <div *ngIf="doctorDetails">
-        <div class="profile-grid">
-          <div class="profile-field">
-            <div class="pf-label">Full Name</div>
-            <div class="pf-value">{{ doctorDetails.fullName }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Email</div>
-            <div class="pf-value">{{ doctorDetails.email }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Specialty</div>
-            <div class="pf-value">{{ doctorDetails.specialty }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Experience</div>
-            <div class="pf-value">
-              {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} years
-            </div>
-          </div>
-        </div>
+      <div class="profile-grid" *ngIf="doctorDetails">
+        <div class="profile-field"><label>Name:</label><span>{{ doctorDetails.fullName }}</span></div>
+        <div class="profile-field"><label>Email:</label><span>{{ doctorDetails.email }}</span></div>
+        <div class="profile-field"><label>Specialty:</label><span>{{ doctorDetails.specialty }}</span></div>
+        <div class="profile-field"><label>Experience:</label><span>{{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs</span></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Clinics -->
-    <div class="card">
-      <div class="card-header">
-        <h3>🏥 My Clinics</h3>
-        <a class="btn-add" routerLink="/mediconnect/clinic/create">＋ Add Clinic</a>
-      </div>
+    <section class="card">
+      <header>
+        <h3>My Clinics</h3>
+        <a routerLink="/mediconnect/clinic/create" class="btn-primary">+ Add Clinic</a>
+      </header>
 
-      <ul class="data-list" *ngIf="clinics.length > 0">
-        <li class="data-item clickable"
-            *ngFor="let clinic of clinics"
-            [class.active-item]="selectedClinicId === clinic.clinicId"
-            (click)="onClinicSelect(clinic)">
-          <div class="item-left">
-            <span class="item-title">{{ clinic.clinicName }}</span>
-            <span class="item-sub">📍 {{ clinic.location }}</span>
-          </div>
+      <ul class="list" *ngIf="clinics.length > 0; else noClinics">
+        <li *ngFor="let clinic of clinics"
+            (click)="onClinicSelect(clinic)"
+            [class.active]="selectedClinicId === clinic.clinicId">
+          <strong>{{ clinic.clinicName }}</strong>
+          <small>: {{ clinic.location }}</small>
         </li>
       </ul>
-    </div>
 
-    <!-- Appointments -->
-    <div class="card" *ngIf="selectedClinicId">
-      <div class="card-header">
-        <h3>📅 Appointments</h3>
-      </div>
+      <ng-template #noClinics>
+        <div style="opacity:.75;">No clinics found.</div>
+      </ng-template>
+    </section>
 
-      <ul class="data-list" *ngIf="selectedClinicAppointments.length > 0">
-        <li class="data-item" *ngFor="let appt of selectedClinicAppointments">
-          <div class="item-left">
-            <span class="item-title">{{ appt.appointmentDate | date:'mediumDate' }}</span>
-            <span class="item-sub">{{ appt.purpose }}</span>
-          </div>
+    <section class="card" *ngIf="selectedClinicId">
+      <header><h3>Appointments</h3></header>
+
+      <ul class="list" *ngIf="selectedClinicAppointments.length > 0; else noDocAppts">
+        <li *ngFor="let appt of selectedClinicAppointments">
+          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
+          <small>: {{ appt.purpose }}</small>
         </li>
       </ul>
-    </div>
 
-    <!-- Registered Patients -->
-    <div class="card" *ngIf="selectedClinicId">
-      <div class="card-header">
-        <h3>🧑‍🤝‍🧑 Registered Patients</h3>
-      </div>
+      <ng-template #noDocAppts>
+        <div style="opacity:.75;">No appointments for this clinic.</div>
+      </ng-template>
+    </section>
 
-      <ul class="data-list" *ngIf="doctors.length > 0">
-        <li class="data-item" *ngFor="let p of doctors">
-          <div class="item-left">
-            <span class="item-title">{{ p.fullName }}</span>
-            <span class="item-sub">{{ p.email }}</span>
-          </div>
+    <section class="card" *ngIf="selectedClinicId">
+      <header><h3>Registered Patients</h3></header>
+
+      <ul class="list" *ngIf="doctors.length > 0; else noPatients">
+        <li *ngFor="let p of doctors">
+          <strong>{{ p.fullName || ('Patient #' + p.patientId) }}</strong>
+          <small>: {{ p.email || '-' }}</small>
         </li>
       </ul>
-    </div>
+
+      <ng-template #noPatients>
+        <div style="opacity:.75;">No registered patients.</div>
+      </ng-template>
+    </section>
 
   </div>
 
-  <!-- ===================== ✅ PATIENT VIEW ===================== -->
-  <div class="dashboard-body" *ngIf="role === 'PATIENT'">
 
-    <!-- Welcome -->
-    <div class="welcome-header" *ngIf="patientDetails">
-      <div class="welcome-label">Welcome back</div>
-      <div class="welcome-name">{{ patientDetails.fullName }}</div>
-      <div class="welcome-sub">Manage your appointments and health records</div>
-    </div>
+  <div class="dashboard-body patient-dashboard" *ngIf="role === 'PATIENT'">
 
-    <!-- Stats -->
-    <div class="stats-row">
+    <section class="hero" *ngIf="patientDetails">
+      <h1>Welcome, <span>{{ patientDetails.fullName }}</span></h1>
+      <p>Manage your appointments and health records</p>
+    </section>
+
+    <section class="stats-row">
       <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-num">{{ appointments.length }}</div>
-        <div class="stat-lbl">Appointments</div>
+        <div class="stat-label">Appointments</div>
       </div>
+
       <div class="stat-card">
         <div class="stat-icon">🏥</div>
         <div class="stat-num">{{ clinics.length }}</div>
-        <div class="stat-lbl">Clinics</div>
+        <div class="stat-label">Clinics</div>
       </div>
+
       <div class="stat-card">
         <div class="stat-icon">👨‍⚕️</div>
         <div class="stat-num">{{ doctors.length }}</div>
-        <div class="stat-lbl">Doctors</div>
+        <div class="stat-label">Doctors</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Patient Profile -->
-    <div class="card">
-      <div class="card-header">
-        <h3>🧑 Patient Profile</h3>
-        <div class="btn-group">
+    <section class="card">
+      <header>
+        <h3>Patient Profile</h3>
+        <div>
           <button class="btn-edit" (click)="navigateToEditPatient()">Edit</button>
           <button class="btn-delete" (click)="deletePatient()">Delete</button>
         </div>
-      </div>
+      </header>
 
-      <div *ngIf="patientDetails">
-        <div class="profile-grid">
-          <div class="profile-field">
-            <div class="pf-label">Full Name</div>
-            <div class="pf-value">{{ patientDetails.fullName }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Email</div>
-            <div class="pf-value">{{ patientDetails.email }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Contact</div>
-            <div class="pf-value">{{ patientDetails.contactNumber }}</div>
-          </div>
-          <div class="profile-field">
-            <div class="pf-label">Address</div>
-            <div class="pf-value">{{ patientDetails.address }}</div>
-          </div>
-        </div>
+      <div class="profile-grid" *ngIf="patientDetails">
+        <div class="profile-field"><label>Full Name:</label><span>{{ patientDetails.fullName }}</span></div>
+        <div class="profile-field"><label>Email:</label><span>{{ patientDetails.email }}</span></div>
+        <div class="profile-field"><label>Contact:</label><span>{{ patientDetails.contactNumber }}</span></div>
+        <div class="profile-field"><label>Address:</label><span>{{ patientDetails.address }}</span></div>
       </div>
+    </section>
+
+    <section class="card">
+      <header>
+        <h3>My Appointments</h3>
+        <a routerLink="/mediconnect/appointment/create" class="btn-primary">+ Book Appointment</a>
+      </header>
+
+      <ul class="list" *ngIf="appointments.length > 0; else noPatAppts">
+        <li *ngFor="let appt of appointments">
+          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
+          <small>: {{ appt.purpose }}</small>
+        </li>
+      </ul>
+
+      <ng-template #noPatAppts>
+        <div style="opacity:.75;">No appointments booked yet.</div>
+      </ng-template>
+    </section>
+
+  </div>
+
+</div> -->
+
+<div class="dashboard-root">
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">⚕️</span>
+      <span class="brand-name">Medi<span>Connect</span></span>
     </div>
 
-    <!-- My Appointments -->
-    <div class="card">
-      <div class="card-header">
-        <h3>📅 My Appointments</h3>
-        <a class="btn-add" routerLink="/mediconnect/appointment/create">＋ Book Appointment</a>
+    <div class="nav-actions">
+      <span class="role-badge">{{ role }}</span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ================= DOCTOR VIEW ================= -->
+  <div class="dashboard-body doctor-dashboard" *ngIf="role === 'DOCTOR'">
+
+    <!-- HERO -->
+    <section class="hero" *ngIf="doctorDetails">
+      <h1>Welcome, <span>Dr. {{ doctorDetails.fullName }}</span></h1>
+      <p>{{ doctorDetails.specialty }} · {{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs experience</p>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">🏥</div>
+        <div class="stat-num">{{ clinics.length }}</div>
+        <div class="stat-label">Clinics</div>
       </div>
 
-      <ul class="data-list" *ngIf="appointments.length > 0">
-        <li class="data-item" *ngFor="let appt of appointments">
-          <div class="item-left">
-            <span class="item-title">{{ appt.appointmentDate | date:'mediumDate' }}</span>
-            <span class="item-sub">{{ appt.purpose }}</span>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-num">{{ selectedClinicAppointments.length }}</div>
+        <div class="stat-label">Appointments</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🧑‍🤝‍🧑</div>
+        <div class="stat-num">{{ doctors.length }}</div>
+        <div class="stat-label">Patients</div>
+      </div>
+    </section>
+
+    <!-- DOCTOR PROFILE -->
+    <section class="card">
+      <header>
+        <h3>Doctor Profile</h3>
+        <div>
+          <button class="btn-edit" (click)="navigateToEditDoctor()">Edit</button>
+          <button class="btn-delete" (click)="deleteDoctor()">Delete</button>
+        </div>
+      </header>
+
+      <div class="profile-grid" *ngIf="doctorDetails">
+        <div class="profile-field">
+          <label>Name: </label>
+          <span>{{ doctorDetails.fullName }}</span>
+        </div>
+        <div class="profile-field">
+          <label>Email: </label>
+          <span>{{ doctorDetails.email }}</span>
+        </div>
+        <div class="profile-field">
+          <label>Specialty: </label>
+          <span>{{ doctorDetails.specialty }}</span>
+        </div>
+        <div class="profile-field">
+          <label>Experience: </label>
+          <span>{{ doctorDetails.yearsOfExperience || doctorDetails.experience }} yrs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLINICS -->
+    <section class="card">
+      <header>
+        <h3>My Clinics</h3>
+        <a routerLink="/mediconnect/clinic/create" class="btn-primary">+ Add Clinic</a>
+      </header>
+
+      <ul class="list" *ngIf="clinics.length > 0; else noClinics">
+        <li *ngFor="let clinic of clinics"
+            (click)="onClinicSelect(clinic)"
+            [class.active]="selectedClinicId === clinic.clinicId">
+          <div>
+            <strong>{{ clinic.clinicName }}</strong>
+            <small>{{ clinic.location }}</small>
           </div>
         </li>
       </ul>
-    </div>
+
+      <ng-template #noClinics>
+        <div class="empty-state">No clinics found.</div>
+      </ng-template>
+    </section>
+
+    <!-- APPOINTMENTS -->
+    <section class="card" *ngIf="selectedClinicId">
+      <header><h3>Appointments</h3></header>
+
+      <ul class="list" *ngIf="selectedClinicAppointments.length > 0; else noDocAppts">
+        <li *ngFor="let appt of selectedClinicAppointments">
+          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
+          <!-- <strong>{{ appt.patientId}}</strong> -->
+          <small>{{ appt.purpose }}</small>
+        </li>
+      </ul>
+
+      <ng-template #noDocAppts>
+        <div class="empty-state">No appointments for this clinic.</div>
+      </ng-template>
+    </section>
 
   </div>
+
+  <!-- ================= PATIENT VIEW ================= -->
+  <div class="dashboard-body patient-dashboard" *ngIf="role === 'PATIENT'">
+
+    <!-- HERO -->
+    <section class="hero" *ngIf="patientDetails">
+      <h1>Welcome, <span>{{ patientDetails.fullName }}</span></h1>
+      <p>Manage your appointments and health records</p>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-num">{{ appointments.length }}</div>
+        <div class="stat-label">Appointments</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🏥</div>
+        <div class="stat-num">{{ clinics.length }}</div>
+        <div class="stat-label">Clinics</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👨‍⚕️</div>
+        <div class="stat-num">{{ doctors.length }}</div>
+        <div class="stat-label">Doctors</div>
+      </div>
+    </section>
+
+    <!-- PATIENT PROFILE -->
+    <section class="card">
+      <header>
+        <h3>Patient Profile</h3>
+        <div>
+          <button class="btn-edit" (click)="navigateToEditPatient()">Edit</button>
+          <button class="btn-delete" (click)="deletePatient()">Delete</button>
+        </div>
+      </header>
+
+      <div class="profile-grid" *ngIf="patientDetails">
+        <div class="profile-field"><label>Name:  </label><span>{{ patientDetails.fullName }}</span></div>
+        <div class="profile-field"><label>Email:  </label><span>{{ patientDetails.email }}</span></div>
+        <div class="profile-field"><label>Contact:  </label><span>{{ patientDetails.contactNumber }}</span></div>
+        <div class="profile-field"><label>Address:  </label><span>{{ patientDetails.address }}</span></div>
+      </div>
+    </section>
+
+    <!-- MY APPOINTMENTS -->
+    <section class="card">
+      <header>
+        <h3>My Appointments</h3>
+        <a routerLink="/mediconnect/appointment/create" class="btn-primary">+ Book Appointment</a>
+      </header>
+
+      <ul class="list" *ngIf="appointments.length > 0; else noPatAppts">
+        <li *ngFor="let appt of appointments">
+          <strong>{{ appt.appointmentDate | date:'mediumDate' }}</strong>
+          <div class="clinic-info">
+            🏥 {{ appt.clinic?.clinicName }} – {{ appt.clinic?.location }}
+          </div>
+          <small>{{ appt.purpose }}</small>
+        </li>
+      </ul>
+
+      <ng-template #noPatAppts>
+        <div class="empty-state">No appointments booked yet.</div>
+      </ng-template>
+    </section>
+
+  </div>
+
 </div>

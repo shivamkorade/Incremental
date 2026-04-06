@@ -22,7 +22,7 @@ export class ClinicCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Get doctorId from localStorage
+    //  Get doctorId from localStorage
     this.doctorId = Number(localStorage.getItem('doctor_id'));
 
     this.clinicForm = this.fb.group({
@@ -57,7 +57,7 @@ export class ClinicCreateComponent implements OnInit {
       return;
     }
 
-    // ✅ FIXED: send doctorId as number, not whole doctor object
+    //  FIXED: send doctorId as number, not whole doctor object
     const clinicPayload = {
       ...this.clinicForm.value,
       doctorId: this.doctorId

@@ -1,706 +1,899 @@
+// /* ===== RESET ===== */
+// * {
+//   box-sizing: border-box;
+//   font-family: 'Inter', system-ui, sans-serif;
+// }
 
-   
+// body {
+//   margin: 0;
+//   background: #F8FAFC;
+//   color: #0F172A;
+// }
 
-/* ================================
-   LIGHT HEALTHCARE BACKGROUND (COMBINED)
-   ================================ */
+// /* ===== NAVBAR ===== */
+// .navbar {
+//   margin: 16px;
+//   padding: 14px 28px;
+//   border-radius: 16px;
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// }
 
-.dashboard {
-  min-height: 100vh;
-  font-family: var(--font-body);
-  position: relative;
-  overflow: hidden;
+// .brand-name {
+//   font-weight: 700;
+// }
+// .brand-name span {
+//   color: #2563EB;
+// }
 
-  /* Light Healing Green base */
-  background: linear-gradient(135deg, #EAF6EF 0%, #D8EFE4 45%, #C6E6D6 100%);
-  color: #123;
+// .role-badge {
+//   padding: 6px 14px;
+//   border-radius: 999px;
+//   background: #EFF6FF;
+//   color: #2563EB;
+//   font-weight: 600;
+//   font-size: 13px;
+// }
+
+// /* ===== LAYOUT ===== */
+// .dashboard-body {
+//   max-width: 1300px;
+//   margin: auto;
+//   padding: 20px 40px 60px;
+// }
+
+// /* ===== HERO ===== */
+// .hero {
+//   padding: 32px;
+//   border-radius: 20px;
+//   background: linear-gradient(135deg, #EFF6FF, #F0F9FF);
+//   border: 1px solid #E0F2FE;
+//   margin-bottom: 32px;
+// }
+
+// .hero h1 {
+//   margin: 0;
+//   font-size: 28px;
+// }
+// .hero h1 span {
+//   color: #2563EB;
+// }
+// .hero p {
+//   margin-top: 6px;
+//   color: #64748B;
+// }
+
+// /* ===== STATS ===== */
+// .stats-row {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+//   gap: 24px;
+//   margin-bottom: 36px;
+// }
+
+// .stat-card {
+//   padding: 24px;
+//   border-radius: 18px;
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   text-align: center;
+//   transition: transform .2s ease, box-shadow .2s ease;
+// }
+
+// .stat-card:hover {
+//   transform: translateY(-4px);
+//   box-shadow: 0 10px 30px rgba(0,0,0,.06);
+// }
+
+// .stat-icon {
+//   font-size: 28px;
+// }
+// .stat-num {
+//   font-size: 32px;
+//   font-weight: 700;
+// }
+// .stat-label {
+//   color: #64748B;
+//   font-size: 14px;
+// }
+
+// /* ===== CARDS ===== */
+// .card {
+//   padding: 28px;
+//   border-radius: 20px;
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   margin-bottom: 28px;
+// }
+
+// .card header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 20px;
+// }
+
+// .card h3 {
+//   margin: 0;
+//   font-size: 18px;
+// }
+
+// /* ===== PROFILE ===== */
+// .profile-grid {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+//   gap: 18px;
+// }
+
+// .profile-field {
+//   padding: 14px 16px;
+//   border-radius: 14px;
+//   background: #F8FAFC;
+//   border: 1px solid #E5E7EB;
+// }
+
+// .profile-field label {
+//   font-size: 12px;
+//   color: #64748B;
+// }
+// .profile-field span {
+//   font-weight: 600;
+// }
+
+// /* ===== LIST ===== */
+// .list {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .list li {
+//   padding: 16px;
+//   border-radius: 14px;
+//   background: #F8FAFC;
+//   border: 1px solid #E5E7EB;
+//   margin-bottom: 12px;
+//   cursor: pointer;
+//   transition: background .2s ease;
+// }
+
+// .list li:hover {
+//   background: #EFF6FF;
+// }
+
+// .list li.active {
+//   border-left: 4px solid #2563EB;
+// }
+
+// /* ===== BUTTONS ===== */
+// .btn-primary {
+//   padding: 8px 18px;
+//   border-radius: 999px;
+//   background: #2563EB;
+//   color: white;
+//   text-decoration: none;
+//   font-weight: 600;
+// }
+
+// .btn-edit {
+//   padding: 6px 14px;
+//   border-radius: 999px;
+//   background: #F1F5F9;
+//   color: #0F172A;
+//   border: 1px solid #E5E7EB;
+// }
+
+// .btn-delete {
+//   padding: 6px 14px;
+//   border-radius: 999px;
+//   background: #FEF2F2;
+//   color: #B91C1C;
+//   border: 1px solid #FECACA;
+// }
+
+// .logout-btn {
+//   padding: 6px 14px;
+//   border-radius: 999px;
+//   background: #2563EB;
+//   color: white;
+//   border: none;
+// }
+
+// /* =====================================================
+//    DOCTOR DASHBOARD – CLINICAL MODE
+//    ===================================================== */
+
+// .doctor-dashboard {
+//   background: #F8FAFC;
+// }
+
+// /* ===== HERO (Clinical Header) ===== */
+// .doctor-dashboard .hero {
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   box-shadow: none;
+//   border-radius: 12px;
+//   padding: 28px 32px;
+// }
+
+// .doctor-dashboard .hero h1 {
+//   font-size: 26px;
+//   font-weight: 700;
+// }
+
+// .doctor-dashboard .hero h1 span {
+//   color: #1E40AF; /* deep hospital blue */
+// }
+
+// .doctor-dashboard .hero p {
+//   color: #475569;
+//   font-size: 14px;
+// }
+
+// /* ===== STATS (Clinical KPIs) ===== */
+// .doctor-dashboard .stat-card {
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 10px;
+//   box-shadow: none;
+//   text-align: left;
+//   padding: 20px;
+// }
+
+// .doctor-dashboard .stat-card:hover {
+//   transform: none;
+//   box-shadow: none;
+// }
+
+// .doctor-dashboard .stat-icon {
+//   font-size: 20px;
+//   opacity: 0.7;
+// }
+
+// .doctor-dashboard .stat-num {
+//   font-size: 26px;
+//   font-weight: 700;
+// }
+
+// .doctor-dashboard .stat-label {
+//   font-size: 13px;
+//   color: #64748B;
+// }
+
+// /* ===== CARDS (Clinical Panels) ===== */
+// .doctor-dashboard .card {
+//   background: #FFFFFF;
+//   border: 1px solid #CBD5E1;
+//   border-radius: 12px;
+//   box-shadow: none;
+// }
+
+// .doctor-dashboard .card header {
+//   border-bottom: 1px solid #E5E7EB;
+//   padding-bottom: 12px;
+// }
+
+// .doctor-dashboard .card h3 {
+//   font-size: 16px;
+//   font-weight: 700;
+//   color: #0F172A;
+// }
+
+// .doctor-dashboard .card h3::after {
+//   display: none;
+// }
+
+// /* ===== PROFILE FIELDS (Clinical Data Blocks) ===== */
+// .doctor-dashboard .profile-field {
+//   background: #F8FAFC;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 8px;
+//   padding: 14px;
+// }
+
+// .doctor-dashboard .profile-field:hover {
+//   background: #F8FAFC;
+//   transform: none;
+// }
+
+// .doctor-dashboard .profile-field label {
+//   font-size: 11px;
+//   text-transform: uppercase;
+//   letter-spacing: .04em;
+//   color: #64748B;
+// }
+
+// .doctor-dashboard .profile-field span {
+//   font-size: 14px;
+//   font-weight: 600;
+// }
+
+// /* ===== LISTS (Clinical Tables Feel) ===== */
+// .doctor-dashboard .list li {
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 8px;
+//   padding: 14px 16px;
+// }
+
+// .doctor-dashboard .list li:hover {
+//   background: #F8FAFC;
+//   transform: none;
+// }
+
+// .doctor-dashboard .list li.active {
+//   border-left: 4px solid #1E40AF;
+// }
+
+// /* ===== BUTTONS (Clinical Actions) ===== */
+// .doctor-dashboard .btn-primary {
+//   background: #1E40AF;
+//   border-radius: 6px;
+//   font-size: 13px;
+// }
+
+// .doctor-dashboard .btn-edit {
+//   background: #F1F5F9;
+//   border: 1px solid #CBD5E1;
+//   border-radius: 6px;
+//   font-size: 13px;
+// }
+
+// .doctor-dashboard .btn-delete {
+//   background: #FFF1F2;
+//   border: 1px solid #FECACA;
+//   border-radius: 6px;
+//   font-size: 13px;
+// }
+
+// /* =====================================================
+//    PATIENT DASHBOARD – FRIENDLY HEALTHCARE MODE
+//    ===================================================== */
+
+// .patient-dashboard {
+//   background: #F8FAFC;
+// }
+
+// /* ===== HERO (Warm Welcome) ===== */
+// .patient-dashboard .hero {
+//   background: linear-gradient(135deg, #ECFEFF, #EFF6FF);
+//   border: 1px solid #E0F2FE;
+//   border-radius: 24px;
+//   padding: 36px;
+// }
+
+// .patient-dashboard .hero h1 {
+//   font-size: 30px;
+//   font-weight: 700;
+// }
+
+// .patient-dashboard .hero h1 span {
+//   color: #0EA5E9; /* calm friendly blue */
+// }
+
+// .patient-dashboard .hero p {
+//   color: #475569;
+//   font-size: 15px;
+// }
+
+// /* ===== STATS (Friendly Cards) ===== */
+// .patient-dashboard .stat-card {
+//   background: linear-gradient(180deg, #FFFFFF, #F8FAFC);
+//   border: 1px solid #E5E7EB;
+//   border-radius: 22px;
+//   padding: 26px;
+//   box-shadow: 0 10px 30px rgba(0,0,0,.06);
+//   text-align: center;
+// }
+
+// .patient-dashboard .stat-card:hover {
+//   transform: translateY(-6px);
+//   box-shadow: 0 16px 40px rgba(0,0,0,.08);
+// }
+
+// .patient-dashboard .stat-icon {
+//   font-size: 30px;
+//   margin-bottom: 6px;
+// }
+
+// .patient-dashboard .stat-num {
+//   font-size: 34px;
+//   font-weight: 800;
+//   color: #2563EB;
+// }
+
+// .patient-dashboard .stat-label {
+//   font-size: 14px;
+//   color: #64748B;
+// }
+
+// /* ===== CARDS (Patient Panels) ===== */
+// .patient-dashboard .card {
+//   background: #FFFFFF;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 24px;
+//   box-shadow: 0 14px 40px rgba(0,0,0,.06);
+// }
+
+// .patient-dashboard .card header {
+//   border-bottom: none;
+// }
+
+// .patient-dashboard .card h3 {
+//   font-size: 19px;
+//   font-weight: 700;
+//   color: #0F172A;
+// }
+
+// /* ===== PROFILE FIELDS (Soft & Friendly) ===== */
+// .patient-dashboard .profile-field {
+//   background: #F1F5F9;
+//   border: none;
+//   border-radius: 18px;
+//   padding: 16px;
+// }
+
+// .patient-dashboard .profile-field label {
+//   font-size: 12px;
+//   color: #64748B;
+// }
+
+// .patient-dashboard .profile-field span {
+//   font-size: 15px;
+//   font-weight: 600;
+// }
+
+// /* ===== LISTS (Appointments Friendly List) ===== */
+// .patient-dashboard .list li {
+//   background: #F8FAFC;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 18px;
+//   padding: 18px;
+// }
+
+// .patient-dashboard .list li:hover {
+//   background: #EFF6FF;
+//   transform: translateX(6px);
+// }
+
+// /* ===== PRIMARY ACTION (Book Appointment) ===== */
+// .patient-dashboard .btn-primary {
+//   background: linear-gradient(135deg, #22C55E, #16A34A);
+//   border-radius: 999px;
+//   font-size: 14px;
+//   padding: 10px 20px;
+//   box-shadow: 0 6px 20px rgba(34,197,94,.35);
+// }
+
+// /* ===== EDIT / DELETE (Gentle) ===== */
+// .patient-dashboard .btn-edit {
+//   background: #EFF6FF;
+//   color: #2563EB;
+//   border: 1px solid #BFDBFE;
+//   border-radius: 999px;
+// }
+
+// .patient-dashboard .btn-delete {
+//   background: #FEF2F2;
+//   color: #B91C1C;
+//   border: 1px solid #FECACA;
+//   border-radius: 999px;
+// }
+
+// /* =====================================================
+//    GLOBAL HEALTHCARE GRADIENT ACCENTS
+//    ===================================================== */
+
+// /* Subtle page background depth */
+// .dashboard-root {
+//   background:
+//     linear-gradient(
+//       180deg,
+//       #F8FAFC 0%,
+//       #F1F5F9 100%
+//     );
+// }
+
+// /* =====================================================
+//    NAVBAR – Clinical Gradient Strip
+//    ===================================================== */
+
+// .navbar {
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// .navbar::after {
+//   content: '';
+//   position: absolute;
+//   bottom: 0;
+//   left: 0;
+//   height: 3px;
+//   width: 100%;
+//   background: linear-gradient(
+//     90deg,
+//     #2563EB,
+//     #0EA5E9,
+//     #22C55E
+//   );
+// }
+
+// /* =====================================================
+//    HERO – Clinical Gradient Layer
+//    ===================================================== */
+
+// .hero {
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// .hero::before {
+//   content: '';
+//   position: absolute;
+//   inset: 0;
+//   background:
+//     radial-gradient(
+//       circle at top right,
+//       rgba(14,165,233,0.15),
+//       transparent 60%
+//     ),
+//     radial-gradient(
+//       circle at bottom left,
+//       rgba(34,197,94,0.12),
+//       transparent 60%
+//     );
+//   pointer-events: none;
+// }
+
+// /* =====================================================
+//    DOCTOR DASHBOARD – CLINICAL GRADIENT ENHANCEMENTS
+//    ===================================================== */
+
+// .doctor-dashboard .stat-card {
+//   background:
+//     linear-gradient(
+//       180deg,
+//       #FFFFFF 0%,
+//       #F8FAFC 100%
+//     );
+// }
+
+// /* Thin clinical accent on KPI cards */
+// .doctor-dashboard .stat-card::before {
+//   content: '';
+//   display: block;
+//   height: 4px;
+//   width: 40px;
+//   margin-bottom: 10px;
+//   border-radius: 999px;
+//   background: linear-gradient(
+//     90deg,
+//     #1E40AF,
+//     #0EA5E9
+//   );
+// }
+
+// /* Clinical section separators */
+// .doctor-dashboard .card header {
+//   position: relative;
+// }
+
+// .doctor-dashboard .card header::after {
+//   content: '';
+//   position: absolute;
+//   bottom: -10px;
+//   left: 0;
+//   width: 100%;
+//   height: 1px;
+//   background: linear-gradient(
+//     90deg,
+//     #CBD5E1,
+//     transparent
+//   );
+// }
+
+// /* =====================================================
+//    PATIENT DASHBOARD – FRIENDLY GRADIENT ENHANCEMENTS
+//    ===================================================== */
+
+// /* Warm healthcare gradient for patient cards */
+// .patient-dashboard .card {
+//   background:
+//     linear-gradient(
+//       180deg,
+//       #FFFFFF 0%,
+//       #F8FAFC 100%
+//     );
+// }
+
+// /* Friendly highlight on stat cards */
+// .patient-dashboard .stat-card {
+//   position: relative;
+// }
+
+// .patient-dashboard .stat-card::after {
+//   content: '';
+//   position: absolute;
+//   inset: 0;
+//   border-radius: 22px;
+//   background:
+//     linear-gradient(
+//       135deg,
+//       rgba(14,165,233,0.08),
+//       rgba(34,197,94,0.08)
+//     );
+//   pointer-events: none;
+// }
+
+// /* Appointment list – gentle success tint */
+// .patient-dashboard .list li {
+//   background:
+//     linear-gradient(
+//       180deg,
+//       #F8FAFC,
+//       #F1F5F9
+//     );
+// }
+
+// /* =====================================================
+//    PRIMARY ACTION – HEALTHCARE CTA GRADIENT
+//    ===================================================== */
+
+// .btn-primary {
+//   background: linear-gradient(
+//     135deg,
+//     #2563EB,
+//     #0EA5E9
+//   );
+// }
+
+// .patient-dashboard .btn-primary {
+//   background: linear-gradient(
+//     135deg,
+//     #22C55E,
+//     #16A34A
+//   );
+// }
+
+// /* =====================================================
+//    MICRO‑INTERACTION (VERY SUBTLE)
+//    ===================================================== */
+
+// .stat-card,
+// .card,
+// .list li {
+//   transition:
+//     transform .2s ease,
+//     box-shadow .2s ease,
+//     background .2s ease;
+// }
+
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Subtle moving healthcare symbols layer */
-.dashboard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-
-  /* medical cross + heart + pulse (subtle) */
-  background-image: url("data:image/svg+xml,%3Csvg width='260' height='260' viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.28'%3E%3Cg fill='none' stroke='%234B9B6E' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M40 70h35v-35h30v35h35v30h-35v35h-30v-35H40z'/%3E%3Cpath d='M30 190h45l12-18 18 36 20-54 18 36h35'/%3E%3C/g%3E%3Cg fill='%236BBF8A'%3E%3Cpath d='M200 78c-10-16-36-14-42 6-6-20-32-22-42-6-10 16 0 34 18 46 10 7 24 15 24 15s14-8 24-15c18-12 28-30 18-46z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 260px 260px;
-
-  /* Gentle motion */
-  animation: floatBg 40s linear infinite;
-  opacity: 0.55; /* visible but not disturbing */
+body {
+  margin: 0;
+  background: #F8FAFC;
+  color: #0F172A;
 }
 
-/* Soft overlay to keep UI readable */
-.dashboard::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-
-  background: radial-gradient(900px 520px at 20% 12%, rgba(255,255,255,0.55), transparent 62%),
-              radial-gradient(900px 520px at 80% 18%, rgba(255,255,255,0.35), transparent 65%),
-              linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.06));
-}
-
-/* Keep all dashboard content above background layers */
-.dashboard > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Background animation */
-@keyframes floatBg {
-  from { background-position: 0 0; }
-  to   { background-position: 260px 260px; }
-}
-
-/* ================================
-   VISIBILITY FIX: CARDS + TEXT
-   ================================ */
-
-/* White frosted cards (clearly visible) */
-.card,
-.stat-card,
-.data-item {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border: 1px solid rgba(75, 155, 110, 0.22) !important;
-  color: #123 !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-}
-
-/* Headings + primary text */
-.welcome-name,
-.card h3,
-.stat-num,
-.item-title,
-.pf-value {
-  color: #102a23 !important;
-}
-
-/* Secondary text */
-.welcome-sub,
-.stat-lbl,
-.item-sub,
-.pf-label,
-.hint {
-  color: rgba(16, 42, 35, 0.75) !important;
-}
-
-/* ================================
-   NAVBAR (LIGHT GLASS)
-   ================================ */
-
-/* ---- Navbar ---- */
+/* ===== NAVBAR ===== */
 .navbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  margin: 16px;
+  padding: 14px 28px;
+  border-radius: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2.5rem;
+  position: relative;
+}
 
-  background: rgba(66, 116, 231, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  left: 0;
+  background: linear-gradient(90deg, #2563EB, #0EA5E9, #22C55E);
+}
 
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.brand-name {
+  font-weight: 800;
+}
+.brand-name span {
+  color: #2563EB;
+}
 
-    .brand-icon {
-      font-size: 1.4rem;
-      filter: drop-shadow(0 2px 6px rgba(0,212,255,0.4));
-    }
-
-    .brand-name {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-
-      .accent {
-        background: linear-gradient(135deg, var(--cyan), var(--teal));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-    }
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    .nav-role-badge {
-      padding: 0.3rem 0.9rem;
-      background: rgba(0,212,255,0.14);
-      border: 1px solid rgba(0,212,255,0.35);
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--cyan);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      backdrop-filter: blur(8px);
-    }
-  }
+.role-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #EFF6FF;
+  color: #2563EB;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .logout-btn {
-  padding: 0.5rem 1.2rem;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 50px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--white-70);
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-
-  &:hover {
-    background: rgba(255,77,109,0.18);
-    border-color: var(--red);
-    color: var(--red);
-  }
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #2563EB;
+  color: #fff;
+  border: none;
 }
 
-
-/* ---- Layout ---- */
+/* ===== LAYOUT ===== */
 .dashboard-body {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2.5rem 2rem 4rem;
-  animation: fadeUp 0.5s ease both;
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px 40px 60px;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ===== HERO ===== */
+.hero {
+  padding: 36px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ECFEFF, #EFF6FF);
+  border: 1px solid #E0F2FE;
+  margin-bottom: 36px;
 }
 
-/* ---- Welcome header ---- */
-.welcome-header {
-  margin-bottom: 2rem;
-  .welcome-label {
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--cyan);
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-  }
-  .welcome-name {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.1;
-  }
-  .welcome-sub {
-    font-size: 0.9rem;
-    color: var(--white-70);
-    margin-top: 0.4rem;
-    font-weight: 300;
-  }
+.hero h1 {
+  font-size: 30px;
+  margin: 0;
+}
+.hero h1 span {
+  color: #0EA5E9;
+}
+.hero p {
+  margin-top: 8px;
+  color: #475569;
 }
 
-/* ---- Stats row ---- */
+/* ===== STATS ===== */
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 26px;
+  margin-bottom: 40px;
 }
 
 .stat-card {
-  padding: 1.2rem 1.4rem;
-  background: var(--white-5);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--teal));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  &:hover { transform: translateY(-3px); border-color: rgba(0,212,255,0.35); box-shadow: 0 8px 32px rgba(0,0,0,0.3); &::after { opacity: 1; } }
-
-  .stat-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--cyan);
-    line-height: 1;
-  }
-  .stat-lbl { font-size: 0.78rem; color: var(--white-70); margin-top: 0.3rem; font-weight: 400; }
+  padding: 26px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #FFFFFF, #F8FAFC);
+  border: 1px solid #E5E7EB;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
 }
 
-/* ---- Cards ---- */
+.stat-num {
+  font-size: 34px;
+  font-weight: 800;
+  color: #2563EB;
+}
+
+/* ===== CARDS ===== */
 .card {
-  background: var(--white-5);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.6rem 1.8rem;
-  margin-bottom: 1.4rem;
-  backdrop-filter: blur(8px);
-  transition: border-color 0.2s;
-  &:hover { border-color: rgba(0,212,255,0.25); }
+  padding: 30px;
+  border-radius: 24px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 30px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.06);
 }
 
-.card-header {
+.card header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid var(--border);
-
-  h3 {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+  margin-bottom: 22px;
 }
 
-/* ---- Profile details ---- */
+.card h3 {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+/* ===== PROFILE ===== */
 .profile-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  margin-bottom: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 22px;
 }
 
 .profile-field {
-  .pf-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--white-70);
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-  }
-  .pf-value {
-    font-size: 0.95rem;
-    color: var(--white);
-    font-weight: 400;
-  }
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #F1F5F9;
 }
 
-/* ---- Buttons ---- */
-.btn-group { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+.profile-field label {
+  font-size: 15px;
+  color: #2c3c52;
+}
+.profile-field span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ===== LIST ===== */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  padding: 18px;
+  border-radius: 18px;
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 14px;
+  transition: transform .2s ease;
+}
+
+.list li:hover {
+  transform: translateX(6px);
+}
+
+.list li strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.list li small {
+  display: block;
+  font-size: 13px;
+  color: #64748B;
+  margin-top: 4px;
+}
+
+.clinic-info {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(34,197,94,.35);
+}
 
 .btn-edit {
-  padding: 0.55rem 1.2rem;
-  background: var(--cyan-soft);
-  border: 1px solid var(--border);
-  color: var(--cyan);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all 0.2s;
-  &:hover { background: rgba(0,212,255,0.15); border-color: var(--cyan); }
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
 }
 
 .btn-delete {
-  padding: 0.55rem 1.2rem;
-  background: rgba(255,77,109,0.08);
-  border: 1px solid rgba(255,77,109,0.2);
-  color: var(--red);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all 0.2s;
-  &:hover { background: rgba(255,77,109,0.18); border-color: var(--red); }
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
 }
 
-.btn-add {
-  padding: 0.5rem 1.1rem;
-  background: linear-gradient(135deg, var(--cyan) 0%, var(--teal) 100%);
-  color: var(--navy);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 700;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  text-decoration: none;
-  box-shadow: 0 2px 12px rgba(0,212,255,0.25);
-  &:hover { box-shadow: 0 4px 20px rgba(0,212,255,0.4); transform: translateY(-1px); }
-}
-
-/* ---- List items ---- */
-.data-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.data-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.85rem 1.1rem;
-  background: var(--white-5);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  transition: all 0.2s;
-  cursor: default;
-
-  &:hover { background: var(--cyan-soft); border-color: rgba(0,212,255,0.3); }
-  &.clickable { cursor: pointer; }
-  &.active-item { border-color: var(--cyan); background: var(--cyan-soft); }
-
-  .item-left {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    .item-title { font-size: 0.95rem; font-weight: 600; color: var(--white); }
-    .item-sub { font-size: 0.8rem; color: var(--white-70); }
-  }
-
-  .item-actions { display: flex; align-items: center; gap: 0.5rem; }
-}
-
-.small-btn {
-  padding: 0.3rem 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid;
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-body);
-  transition: all 0.15s;
-
-  &.edit {
-    background: var(--cyan-soft);
-    border-color: rgba(0,212,255,0.3);
-    color: var(--cyan);
-    &:hover { background: rgba(0,212,255,0.15); }
-  }
-  &.danger {
-    background: rgba(255,77,109,0.08);
-    border-color: rgba(255,77,109,0.25);
-    color: var(--red);
-    &:hover { background: rgba(255,77,109,0.15); }
-    &:disabled { opacity: 0.4; cursor: not-allowed; }
-  }
-}
-
-/* ---- Status badge ---- */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.2rem 0.65rem;
-  border-radius: 50px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-
-  &.pending   { background: rgba(240,192,64,0.12); border: 1px solid rgba(240,192,64,0.3); color: var(--gold); }
-  &.confirmed { background: rgba(0,229,160,0.1);   border: 1px solid rgba(0,229,160,0.3);  color: var(--green); }
-  &.canceled  { background: rgba(255,77,109,0.1);  border: 1px solid rgba(255,77,109,0.3); color: var(--red); }
-  &.default   { background: var(--white-5);         border: 1px solid var(--border);         color: var(--white-70); }
-}
-
-/* ---- Empty state ---- */
 .empty-state {
   text-align: center;
-  padding: 2.5rem 1rem;
-  .empty-icon { font-size: 2.5rem; margin-bottom: 0.6rem; opacity: 0.5; }
-  .empty-text { color: var(--white-70); font-size: 0.9rem; }
-}
-
-/* ---- Hint text ---- */
-.hint { font-size: 0.82rem; color: var(--white-70); margin-top: 0.6rem; font-style: italic; }
-
-/* ---- Responsive ---- */
-@media (max-width: 700px) {
-  .navbar { padding: 1rem 1.2rem; }
-  .dashboard-body { padding: 1.5rem 1rem 3rem; }
-  .profile-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* =========================================================
-   PASTE THIS AT THE VERY END OF YOUR EXISTING SCSS
-   (It will APPLY gradient colors to all + change card design)
-   ========================================================= */
-
-/* Healing Greens palette */
-.dashboard {
-  --hg-1: #A8D5BA;
-  --hg-2: #6BBF8A;
-  --hg-3: #4B9B6E;
-  --hg-4: #2E7D5C;
-  --hg-5: #1B5E3A;
-
-  --ink: #0f2a22;
-  --ink-70: rgba(15, 42, 34, 0.72);
-  --card-shadow: 0 18px 45px rgba(15, 42, 34, 0.12);
-
-  /* light gradient base */
-  background: linear-gradient(135deg, #EAF6EF 0%, #D8EFE4 45%, #C6E6D6 100%) !important;
-  color: var(--ink) !important;
-}
-
-/* Medical symbols layer (keep, but balanced + nice) */
-.dashboard::before {
-  opacity: 0.28 !important;
-  animation: floatBg 60s linear infinite !important;
-}
-
-.dashboard::after {
-  background:
-    radial-gradient(900px 520px at 20% 12%, rgba(255,255,255,0.70), transparent 62%),
-    radial-gradient(900px 520px at 80% 18%, rgba(255,255,255,0.45), transparent 65%),
-    linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.04)) !important;
-}
-
-/* -------------------------
-   NAVBAR (gradient + glass)
-   ------------------------- */
-.navbar {
-  background: linear-gradient(
-    135deg,
-    rgba(27, 94, 58, 0.92) 0%,
-    rgba(46, 125, 92, 0.82) 55%,
-    rgba(75, 155, 110, 0.72) 100%
-  ) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.22) !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.22) !important;
-}
-
-.navbar .brand-name,
-.navbar .nav-role-badge,
-.logout-btn {
-  color: rgba(255,255,255,0.92) !important;
-}
-
-.navbar .brand-name .accent {
-  background: linear-gradient(135deg, var(--hg-1), #ffffff) !important;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-}
-
-.navbar .nav-role-badge {
-  background: rgba(255,255,255,0.12) !important;
-  border-color: rgba(255,255,255,0.26) !important;
-  color: #ffffff !important;
-}
-
-/* Logout button (light + visible on navbar) */
-.logout-btn {
-  background: rgba(255,255,255,0.10) !important;
-  border-color: rgba(255,255,255,0.28) !important;
-  color: rgba(255,255,255,0.92) !important;
-}
-.logout-btn:hover {
-  background: rgba(255,255,255,0.18) !important;
-  border-color: rgba(255,255,255,0.38) !important;
-  color: #ffffff !important;
-}
-
-/* ---------------------------------------
-   TEXT (make all readable on light theme)
-   --------------------------------------- */
-.welcome-label { color: var(--hg-4) !important; }
-.welcome-name  { color: var(--ink) !important; }
-.welcome-sub   { color: var(--ink-70) !important; }
-
-.card h3,
-.item-title,
-.pf-value { color: var(--ink) !important; }
-
-.stat-lbl,
-.item-sub,
-.pf-label,
-.hint { color: var(--ink-70) !important; }
-
-/* -------------------------------
-   NEW CARD DESIGN (gradient body)
-   Applies to .card, .stat-card, .data-item
-   ------------------------------- */
-.card,
-.stat-card,
-.data-item {
-  /* gradient border (no pseudo needed) */
-  border: 1px solid transparent !important;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,255,255,0.78)) padding-box,
-    linear-gradient(135deg, var(--hg-1), var(--hg-2), var(--hg-4)) border-box !important;
-
-  box-shadow: var(--card-shadow) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
-}
-
-.card:hover,
-.stat-card:hover,
-.data-item:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 22px 60px rgba(15, 42, 34, 0.16) !important;
-}
-
-/* add premium top gradient strip */
-.card,
-.stat-card {
-  position: relative;
-  overflow: hidden;
-}
-.card::after,
-.stat-card::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--hg-2), var(--hg-4), var(--hg-3));
-  opacity: 0.95;
-  pointer-events: none;
-}
-
-/* keep your existing stat-card underline effect but make it green */
-.stat-card::after {
-  /* this overrides your old 2px underline; now it becomes top strip + still looks premium */
-  height: 4px !important;
-  opacity: 0.9 !important;
-  background: linear-gradient(90deg, var(--hg-2), var(--hg-4), var(--hg-3)) !important;
-}
-
-/* Stat number as gradient text */
-.stat-num {
-  background: linear-gradient(135deg, var(--hg-5), var(--hg-4), var(--hg-3));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-}
-
-/* -----------------------------------
-   LIST ITEM (data-item) active/hover
-   ----------------------------------- */
-.data-item.active-item {
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.86)) padding-box,
-    linear-gradient(135deg, var(--hg-4), var(--hg-2)) border-box !important;
-}
-
-/* -------------------------
-   BUTTONS (gradient greens)
-   ------------------------- */
-.btn-add {
-  background: linear-gradient(135deg, var(--hg-2) 0%, var(--hg-4) 55%, var(--hg-3) 100%) !important;
-  color: #ffffff !important;
-  box-shadow: 0 10px 26px rgba(46,125,92,0.25) !important;
-}
-.btn-add:hover {
-  box-shadow: 0 16px 40px rgba(46,125,92,0.35) !important;
-}
-
-.btn-edit {
-  background:
-    linear-gradient(135deg, rgba(107,191,138,0.18), rgba(168,213,186,0.25)) !important;
-  border-color: rgba(46,125,92,0.28) !important;
-  color: var(--hg-5) !important;
-}
-.btn-edit:hover {
-  background:
-    linear-gradient(135deg, rgba(107,191,138,0.26), rgba(168,213,186,0.35)) !important;
-  border-color: rgba(46,125,92,0.42) !important;
-}
-
-.btn-delete {
-  background: linear-gradient(135deg, rgba(255,77,109,0.10), rgba(255,77,109,0.06)) !important;
-}
-
-/* small buttons */
-.small-btn.edit {
-  background: linear-gradient(135deg, rgba(107,191,138,0.20), rgba(168,213,186,0.26)) !important;
-  border-color: rgba(46,125,92,0.28) !important;
-  color: var(--hg-5) !important;
-}
-.small-btn.edit:hover {
-  background: linear-gradient(135deg, rgba(107,191,138,0.28), rgba(168,213,186,0.34)) !important;
-}
-
-.small-btn.danger {
-  background: linear-gradient(135deg, rgba(255,77,109,0.12), rgba(255,77,109,0.08)) !important;
-}
-
-/* -------------------------
-   STATUS BADGES (fresh greens)
-   ------------------------- */
-.status-badge.pending {
-  background: rgba(240,192,64,0.16) !important;
-  border-color: rgba(240,192,64,0.32) !important;
-  color: #8a6a00 !important;
-}
-.status-badge.confirmed {
-  background: rgba(107,191,138,0.20) !important;
-  border-color: rgba(46,125,92,0.34) !important;
-  color: var(--hg-5) !important;
-}
-.status-badge.canceled {
-  background: rgba(255,77,109,0.14) !important;
-  border-color: rgba(255,77,109,0.30) !important;
-  color: #b3203f !important;
-}
-.status-badge.default {
-  background: rgba(255,255,255,0.70) !important;
-  border-color: rgba(46,125,92,0.18) !important;
-  color: var(--ink-70) !important;
-}
-
-/* -----------------------------------
-   Card header separator -> green tint
-   ----------------------------------- */
-.card-header {
-  border-bottom: 1px solid rgba(46,125,92,0.18) !important;
-}
-.card-header h3 {
-  color: var(--ink) !important;
-}
-
-/* -----------------------------------
-   Optional: Slightly stronger icons
-   ----------------------------------- */
-.stat-icon {
-  filter: drop-shadow(0 6px 16px rgba(46,125,92,0.18));
+  padding: 20px;
+  color: #64748B;
 }

@@ -1,0 +1,110 @@
+<div class="home-page">
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="home-navbar">
+    <div class="brand">
+      <span class="icon">⚕️</span>
+      <span class="name">Medi<span>Connect</span></span>
+    </div>
+
+    <div class="nav-actions">
+      <button class="nav-link" (click)="goToLogin()">Login</button>
+      <button class="nav-btn" (click)="goToRegister()">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>
+        Modern Healthcare,<br />
+        <span>Connected Simply</span>
+      </h1>
+
+      <p>
+        MediConnect is a secure digital healthcare platform that connects
+        patients, doctors, and clinics — enabling seamless appointment
+        management and efficient care delivery.
+      </p>
+
+      <div class="hero-actions">
+        <button class="primary-btn" (click)="goToRegister()">
+          Create Account
+        </button>
+        <button class="secondary-btn" (click)="goToLogin()">
+          Login
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="features">
+    <h2>Why Choose MediConnect?</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span>📅</span>
+        <h3>Smart Appointments</h3>
+        <p>Book, view, and manage appointments digitally in real time.</p>
+      </div>
+
+      <div class="feature-card">
+        <span>🏥</span>
+        <h3>Clinic Management</h3>
+        <p>Doctors manage clinics, schedules, and patient records easily.</p>
+      </div>
+
+      <div class="feature-card">
+        <span>🔐</span>
+        <h3>Secure Platform</h3>
+        <p>JWT‑based authentication ensures secure role‑based access.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="workflow">
+    <h2>How MediConnect Works</h2>
+
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <span>👤</span>
+        <h3>Create Profile</h3>
+        <p>Patients and doctors register with secure, role‑based accounts.</p>
+      </div>
+
+      <div class="workflow-card">
+        <span>🏥</span>
+        <h3>Manage Clinics</h3>
+        <p>Doctors configure clinics, availability, and schedules.</p>
+      </div>
+
+      <div class="workflow-card">
+        <span>📅</span>
+        <h3>Book Appointments</h3>
+        <p>Patients book appointments with real‑time availability.</p>
+      </div>
+
+      <div class="workflow-card">
+        <span>✅</span>
+        <h3>Track & Manage</h3>
+        <p>View appointments and manage healthcare interactions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta">
+    <h2>Your Healthcare Journey Starts Here</h2>
+    <p>
+      Built for modern healthcare ecosystems, MediConnect simplifies
+      clinical workflows while improving patient experience.
+    </p>
+
+    <button class="primary-btn large" (click)="goToRegister()">
+      Join MediConnect Today
+    </button>
+  </section>
+
+</div>

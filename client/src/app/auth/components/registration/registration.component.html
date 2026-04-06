@@ -1,4 +1,4 @@
-<form class="form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+<!-- <form class="form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
   <h2>Register</h2>
 
   <div class="grid">
@@ -57,13 +57,12 @@
   <span *ngIf="email?.errors?.['required']">Email is required.</span>
   <span *ngIf="email?.errors?.['email']">Enter a valid email address.</span>
 
-  <!-- ✅ Show backend message under the email input -->
+
   <span *ngIf="email?.errors?.['duplicate']">{{ errorMessage }}</span>
 </div>
     </div>
   </div>
 
-  <!-- Doctor-specific fields -->
   <div *ngIf="selectedRole === 'DOCTOR'" class="role-panel">
     <h3>Doctor Details</h3>
     <div class="grid">
@@ -86,7 +85,6 @@
     </div>
   </div>
 
-  <!-- Patient-specific fields -->
   <div *ngIf="selectedRole === 'PATIENT'" class="role-panel">
     <h3>Patient Details</h3>
     <div class="grid">
@@ -115,4 +113,119 @@
 
   <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
   <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
-</form>
+</form> -->
+
+<div class="register-page">
+
+  <!-- ===== HEADER ===== -->
+  <div class="register-header">
+    <span class="icon">⚕️</span>
+    <h2>Create Your MediConnect Account</h2>
+    <p>Join our secure healthcare platform</p>
+  </div>
+
+  <!-- ===== FORM CARD ===== -->
+  <form class="form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+    <!-- BASIC DETAILS -->
+    <h3 class="section-title">Basic Details</h3>
+
+    <div class="grid">
+      <div class="form-control">
+        <label>Username <span class="req">*</span></label>
+        <input type="text" formControlName="username" placeholder="Username" />
+        <div class="error" *ngIf="username?.touched && username?.invalid">
+          <span *ngIf="username?.errors?.['required']">Username is required.</span>
+          <span *ngIf="username?.errors?.['pattern']">Only letters and numbers allowed.</span>
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label>Password <span class="req">*</span></label>
+        <input type="password" formControlName="password" placeholder="Password" />
+        <div class="error" *ngIf="password?.touched && password?.invalid">
+          <span *ngIf="password?.errors?.['required']">Password is required.</span>
+          <span *ngIf="password?.errors?.['minlength']">Minimum 8 characters.</span>
+          <span *ngIf="password?.errors?.['pattern']">Include capital letter & number.</span>
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label>Role <span class="req">*</span></label>
+        <select formControlName="role" (change)="onRoleChange($event)">
+          <option value="">-- Select Role --</option>
+          <option value="DOCTOR">Doctor</option>
+          <option value="PATIENT">Patient</option>
+        </select>
+        <div class="error" *ngIf="role?.touched && role?.invalid">
+          <span>Role is required.</span>
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label>Full Name <span class="req">*</span></label>
+        <input type="text" formControlName="fullName" placeholder="Full Name" />
+      </div>
+
+      <div class="form-control">
+        <label>Contact Number <span class="req">*</span></label>
+        <input type="text" formControlName="contactNumber" placeholder="10-digit number" />
+      </div>
+
+      <div class="form-control">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" formControlName="email" placeholder="Email address" />
+        <div class="error" *ngIf="email?.errors?.['duplicate']">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCTOR DETAILS -->
+    <div *ngIf="selectedRole === 'DOCTOR'" class="role-panel doctor">
+      <h3>Doctor Details</h3>
+      <div class="grid">
+        <div class="form-control">
+          <label>Specialty <span class="req">*</span></label>
+          <input type="text" formControlName="specialty" placeholder="e.g. Cardiologist" />
+        </div>
+
+        <div class="form-control">
+          <label>Years of Experience <span class="req">*</span></label>
+          <input type="number" formControlName="yearsOfExperience" placeholder="e.g. 5" />
+        </div>
+      </div>
+    </div>
+
+    <!-- PATIENT DETAILS -->
+    <div *ngIf="selectedRole === 'PATIENT'" class="role-panel patient">
+      <h3>Patient Details</h3>
+      <div class="grid">
+        <div class="form-control">
+          <label>Date of Birth <span class="req">*</span></label>
+          <input type="date" formControlName="dateOfBirth" />
+        </div>
+
+        <div class="form-control">
+          <label>Address <span class="req">*</span></label>
+          <textarea formControlName="address" placeholder="Address"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn primary" type="submit">Register</button>
+      <button class="btn outline" type="button" (click)="resetForm()">Reset</button>
+    </div>
+
+    <div class="login-redirect">
+  Already a user?
+  <a routerLink="/auth/login">Login here</a>
+</div>
+
+    <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+    <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  </form>
+</div>
